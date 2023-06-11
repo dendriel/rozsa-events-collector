@@ -105,7 +105,6 @@ public class EventsCollectorManagerTest {
 
         eventsCollectorManager.begin();
         eventsCollectorManager.collect(key, value);
-
         eventsCollectorManager.submit();
 
         Thread.sleep(100);
