@@ -10,10 +10,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner:4.0.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+//    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
 
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
 //    api 'org.apache.commons:commons-math3:3.6.1'
@@ -22,6 +25,7 @@ dependencies {
 //    implementation 'com.google.guava:guava:31.1-jre'
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 java {

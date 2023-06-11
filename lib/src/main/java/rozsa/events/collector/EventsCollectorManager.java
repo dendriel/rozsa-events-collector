@@ -1,7 +1,9 @@
 package rozsa.events.collector;
 
 import rozsa.events.collector.api.EventsIdGenerator;
+import rozsa.events.collector.api.EventsSubmitter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -11,10 +13,16 @@ public class EventsCollectorManager {
 
     private final String idFieldKey;
     private final EventsIdGenerator eventsIdGenerator;
+    private final EventsSubmitter eventsSubmitter;
 
-    public EventsCollectorManager(final String idFieldKey, final EventsIdGenerator eventsIdGenerator) {
+    public EventsCollectorManager(
+            final String idFieldKey,
+            final EventsIdGenerator eventsIdGenerator,
+            final EventsSubmitter eventsSubmitter
+        ) {
         this.idFieldKey = idFieldKey;
         this.eventsIdGenerator = eventsIdGenerator;
+        this.eventsSubmitter = eventsSubmitter;
     }
 
     public void begin() {
@@ -23,22 +31,35 @@ public class EventsCollectorManager {
     }
 
     public void clear() {
-        collectionContext.get().clear();
+        CollectionContext context = collectionContext.get();
+        if (context == null) {
+            return;
+        }
+
+        context.clear();
     }
 
     public void collect(final String key, final Object value) {
-        collectionContext.get().add(key, value);
+        CollectionContext context = collectionContext.get();
+        if (context == null) {
+            return;
+        }
+        context.add(key, value);
     }
 
-    public void submit() {
-
+    public void submit() throws IOException {
+        CollectionContext context = collectionContext.get();
+        if (context == null) {
+            return;
+        }
+        eventsSubmitter.submit(context.getCollection());
     }
 
     /**
      * @return Creates and returns a shallow copy of the collected data so far.
      */
     public Set<Map.Entry<String, Object>> getCollection() {
-        return collectionContext.get().getCollection();
+        return collectionContext.get().getCollection().entrySet();
     }
 
     /**
@@ -60,8 +81,8 @@ public class EventsCollectorManager {
             collection.put(key, value);
         }
 
-        public Set<Map.Entry<String, Object>> getCollection() {
-            return collection.entrySet();
+        public Map<String, Object> getCollection() {
+            return collection;
         }
 
         public void clear() {
