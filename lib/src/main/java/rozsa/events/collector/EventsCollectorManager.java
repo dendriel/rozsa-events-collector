@@ -1,23 +1,29 @@
 package rozsa.events.collector;
 
+import rozsa.events.collector.api.EventsIdGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class EventsCollectorManager {
-
     private static final ThreadLocal<CollectionContext> collectionContext = new ThreadLocal<>();
 
+    private final String idFieldKey;
+    private final EventsIdGenerator eventsIdGenerator;
+
+    public EventsCollectorManager(final String idFieldKey, final EventsIdGenerator eventsIdGenerator) {
+        this.idFieldKey = idFieldKey;
+        this.eventsIdGenerator = eventsIdGenerator;
+    }
+
     public void begin() {
-        // TODO: get ID key from config.
-        // TODO: create ID generator.
-        collectionContext.set(new CollectionContext("id", "123456"));
-        this.clear();
+        Object id = eventsIdGenerator.generate();
+        collectionContext.set(new CollectionContext(idFieldKey, id));
     }
 
     public void clear() {
-        collectionContext.get().reset();
+        collectionContext.get().clear();
     }
 
     public void collect(final String key, final Object value) {
@@ -58,7 +64,7 @@ public class EventsCollectorManager {
             return collection.entrySet();
         }
 
-        public void reset() {
+        public void clear() {
             collection.clear();;
         }
     }
