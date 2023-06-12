@@ -1,4 +1,4 @@
-package rozsa.events.collector.api;
+package com.rozsa.events.collector.api;
 
 
 import java.io.IOException;

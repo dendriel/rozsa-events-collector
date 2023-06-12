@@ -1,4 +1,4 @@
-package rozsa.events.collector;
+package com.rozsa.events.collector;
 
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;

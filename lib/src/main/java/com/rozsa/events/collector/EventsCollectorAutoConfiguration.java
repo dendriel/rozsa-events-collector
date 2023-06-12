@@ -1,12 +1,12 @@
-package rozsa.events.collector;
+package com.rozsa.events.collector;
 
+import com.rozsa.events.collector.api.EventsIdGenerator;
+import com.rozsa.events.collector.api.EventsSubmitter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import rozsa.events.collector.api.EventsIdGenerator;
-import rozsa.events.collector.api.EventsSubmitter;
 
 import java.net.http.HttpClient;
 import java.time.Duration;

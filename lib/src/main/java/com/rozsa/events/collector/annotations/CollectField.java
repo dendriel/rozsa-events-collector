@@ -1,4 +1,4 @@
-package rozsa.events.collector.annotations;
+package com.rozsa.events.collector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,7 +15,7 @@ public @interface CollectField {
     /**
      * Instead of using the field as the capture value, look for an inner-field from this field marked
      * with @CollectField.
-     * @see rozsa.events.collector.annotations.CollectField
+     * @see CollectField
      */
     boolean scanFields() default false;
 }

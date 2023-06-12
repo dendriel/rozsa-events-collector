@@ -1,4 +1,4 @@
-package rozsa.events.collector.annotations;
+package com.rozsa.events.collector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  * to the remote server. The @FinishColleting annotation may be used to interrupt the collection before getting back
  * to the initial method.
  *
- * @see rozsa.events.collector.annotations.Collect
- * @see rozsa.events.collector.annotations.FinishCollecting
+ * @see Collect
+ * @see FinishCollecting
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

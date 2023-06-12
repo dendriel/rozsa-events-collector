@@ -1,7 +1,7 @@
-package rozsa.events.collector;
+package com.rozsa.events.collector;
 
-import rozsa.events.collector.api.EventsIdGenerator;
-import rozsa.events.collector.api.EventsSubmitter;
+import com.rozsa.events.collector.api.EventsIdGenerator;
+import com.rozsa.events.collector.api.EventsSubmitter;
 
 import java.io.IOException;
 import java.util.HashMap;

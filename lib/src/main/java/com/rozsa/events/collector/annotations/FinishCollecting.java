@@ -1,4 +1,4 @@
-package rozsa.events.collector.annotations;
+package com.rozsa.events.collector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * server.
  * Can be used if it is necessary to stop data collecting before getting back to the method marked
  * with @BeginCollecting.
- * @see rozsa.events.collector.annotations.BeginCollecting
+ * @see BeginCollecting
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,7 +1,7 @@
-package rozsa.events.collector;
+package com.rozsa.events.collector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import rozsa.events.collector.api.EventsSubmitter;
+import com.rozsa.events.collector.api.EventsSubmitter;
 
 import java.io.IOException;
 import java.net.URI;

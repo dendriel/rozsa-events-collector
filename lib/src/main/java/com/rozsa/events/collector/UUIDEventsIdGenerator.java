@@ -1,6 +1,6 @@
-package rozsa.events.collector;
+package com.rozsa.events.collector;
 
-import rozsa.events.collector.api.EventsIdGenerator;
+import com.rozsa.events.collector.api.EventsIdGenerator;
 
 import static java.util.UUID.randomUUID;
 
