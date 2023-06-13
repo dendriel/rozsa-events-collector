@@ -2,6 +2,8 @@ package com.rozsa.events.collector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rozsa.events.collector.api.EventsSubmitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +15,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class HttpEventsSubmitter implements EventsSubmitter {
+    public static final Logger log = LoggerFactory.getLogger(HttpEventsSubmitter.class);
+
     private final String contentTypeHeader = "Content-Type";
     private final String jsonContentType = "application/json";
 
@@ -34,6 +38,7 @@ public class HttpEventsSubmitter implements EventsSubmitter {
     @Override
     public void submit(final Map<String, Object> eventData) throws IOException {
         if (eventData.size() == 0) {
+            log.debug("Can't submit an event without data.");
             return;
         }
 
@@ -50,7 +55,7 @@ public class HttpEventsSubmitter implements EventsSubmitter {
                 .thenApply(HttpResponse::statusCode);
 
         completableFuture.whenComplete((integer, throwable) -> {
-            System.out.printf("Post has completed with status %d - throwable %s\n", integer, throwable);
+            log.trace("Events submission has completed with status {} - throwable {} - total events submitted {}", integer, throwable, events.size());
         });
     }
 }
