@@ -38,7 +38,9 @@ public class EventsCollectorManager {
         log.debug("Collection context has initialized. Current event ID is '{}={}'", idFieldKey, id);
     }
 
-    // TODO: clear all data except the id entry.
+    /**
+     * Clears all saved event data, including generated ID. Should be used carefully.
+     */
     public void clear() {
         log.debug("Clearing the event data.");
 
@@ -72,13 +74,21 @@ public class EventsCollectorManager {
             return;
         }
         eventsSubmitter.submit(context.getCollection());
+
+        this.clear();
     }
 
     /**
      * @return Creates and returns a shallow copy of the collected data so far.
      */
     public Set<Map.Entry<String, Object>> getCollection() {
-        return collectionContext.get().getCollection().entrySet();
+
+        CollectionContext context = collectionContext.get();
+        if (context == null) {
+            return Set.of();
+        }
+
+        return context.getCollection().entrySet();
     }
 
     /**
@@ -105,7 +115,7 @@ public class EventsCollectorManager {
         }
 
         public void clear() {
-            collection.clear();;
+            collection.clear();
         }
     }
 }

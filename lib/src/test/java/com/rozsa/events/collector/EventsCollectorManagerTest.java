@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EventsCollectorManagerTest {
 
     @Autowired
-    EventsCollectorManager eventsCollectorManager;
+    private EventsCollectorManager eventsCollectorManager;
 
     private final String eventIdKey = "event_id";
 
