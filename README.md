@@ -146,3 +146,8 @@ To avoid cluttering the business code with observability related functionalities
 
 **EventsCollectorManager**
 - **idFieldKey** - allows to override default ID field key (default: "id")
+
+
+## TODO
+
+- CaptureReturn - collect data from returned value

@@ -13,8 +13,15 @@ import java.lang.annotation.Target;
 public @interface CollectField {
 
     /**
-     * Instead of using the field as the capture value, look for an inner-field from this field marked
-     * with @CollectField.
+     * The key referring to the value captured from this field.
+     * If not specified, the field name will be used. But it is NOT RECOMMENDED due to coupling issues between the
+     * variable name in the code (that can change for any reason) and the data key.
+     */
+    String key() default "";
+
+    /**
+     * Instead of using the field as the capture value, look for an inner-field marked with @CollectField.
+     * WARNING: This is a recursive feature.
      * @see CollectField
      */
     boolean scanFields() default false;

@@ -50,7 +50,7 @@ public class ProceedingJointPointMockFactory {
     public void annotatedBeginCollectingSubmitOnErrorTrue() {}
 
 
-    public static Method beginCollectingSubmitOnErrorFalse() throws NoSuchMethodException {
+    private static Method beginCollectingSubmitOnErrorFalse() throws NoSuchMethodException {
         return ProceedingJointPointMockFactory.class.getDeclaredMethod("annotatedBeginCollectingSubmitOnErrorFalse");
     }
 
