@@ -46,7 +46,7 @@ public class ProceedingJointPointMockFactory {
         return ProceedingJointPointMockFactory.class.getDeclaredMethod("annotatedBeginCollectingSubmitOnErrorTrue");
     }
 
-    @BeginCollecting(submitOnError = true)
+    @BeginCollecting
     public void annotatedBeginCollectingSubmitOnErrorTrue() {}
 
 
