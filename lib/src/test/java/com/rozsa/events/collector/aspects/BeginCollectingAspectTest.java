@@ -1,7 +1,6 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
-import mocks.ProceedingJointPointMockFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +76,10 @@ public class BeginCollectingAspectTest {
         verify(eventsCollectorManager, times(1)).begin();
         verify(eventsCollectorManager, times(0)).submit();
         verify(eventsCollectorManager, times(1)).clear();
+    }
+
+    @Test
+    void coverPointCutEmptyMethod() {
+        beginCollectingAspect.beginCollectingAnnotation();
     }
 }

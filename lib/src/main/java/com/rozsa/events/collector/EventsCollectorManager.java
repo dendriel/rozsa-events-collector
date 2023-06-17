@@ -13,7 +13,7 @@ import java.util.Set;
 public class EventsCollectorManager {
     public static final Logger log = LoggerFactory.getLogger(EventsCollectorManager.class);
 
-    private static final ThreadLocal<CollectionContext> collectionContext = new ThreadLocal<>();
+    private static final ThreadLocal<CollectionContext> collectionContext = ThreadLocal.withInitial(CollectionContext::new);
 
     private final String idFieldKey;
     private final EventsIdGenerator eventsIdGenerator;
@@ -32,8 +32,9 @@ public class EventsCollectorManager {
     public void begin() {
         log.debug("Begin collecting event data.");
 
+        clear();
         Object id = eventsIdGenerator.generate();
-        collectionContext.set(new CollectionContext(idFieldKey, id));
+        collect(idFieldKey, id);
 
         log.debug("Collection context has initialized. Current event ID is '{}={}'", idFieldKey, id);
     }
@@ -44,51 +45,28 @@ public class EventsCollectorManager {
     public void clear() {
         log.debug("Clearing the event data.");
 
-        CollectionContext context = collectionContext.get();
-        if (context == null) {
-            log.warn("Can't clear the event data. Context has not been initialized.");
-            return;
-        }
-
-        context.clear();
+        collectionContext.get().clear();
     }
 
     public void collect(final String key, final Object value) {
         log.debug("Collection event data '{}={}'", key, value);
 
-        CollectionContext context = collectionContext.get();
-        if (context == null) {
-            log.warn("Can't collect event data. Context has not been initialized.");
-            return;
-        }
-
-        context.add(key, value);
+        collectionContext.get().add(key, value);
     }
 
     public void submit() throws IOException {
         log.debug("Submitting the event to remote server.");
 
-        CollectionContext context = collectionContext.get();
-        if (context == null) {
-            log.warn("Can't not submit the event. Context has not been initialized.");
-            return;
-        }
-        eventsSubmitter.submit(context.getCollection());
+        eventsSubmitter.submit(collectionContext.get().getCollection());
 
-        this.clear();
+        clear();
     }
 
     /**
      * @return Creates and returns a shallow copy of the collected data so far.
      */
     public Set<Map.Entry<String, Object>> getCollection() {
-
-        CollectionContext context = collectionContext.get();
-        if (context == null) {
-            return Set.of();
-        }
-
-        return context.getCollection().entrySet();
+        return collectionContext.get().getCollection().entrySet();
     }
 
     /**
@@ -97,9 +75,8 @@ public class EventsCollectorManager {
     public static class CollectionContext {
         private final Map<String, Object> collection;
 
-        public CollectionContext(final String idKey, final Object id) {
+        public CollectionContext() {
             this.collection = new HashMap<>();
-            add(idKey, id);
         }
 
         public void add(final String key, final Object value) {

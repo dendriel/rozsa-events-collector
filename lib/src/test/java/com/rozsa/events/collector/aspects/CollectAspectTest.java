@@ -110,4 +110,8 @@ public class CollectAspectTest {
         verify(eventsCollectorManager, times(1)).collect(eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
     }
 
+    @Test
+    void coverPointCutEmptyMethod() {
+        collectAspect.collectAnnotation();
+    }
 }

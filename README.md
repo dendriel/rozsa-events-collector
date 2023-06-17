@@ -9,7 +9,7 @@ To avoid cluttering the business code with observability related functionalities
 
 - Data - a single element that means something for the specific flow in observation
 - Event - a composition of many pieces of data that have a depper meaning when groupped together.
-- Collect - the action of storing data from a execution flow
+- Collect - the action of storing data from an execution flow
 - Submit - the action of generating and submitting an event to a remote server
 
 ## Collection Approaches
@@ -152,3 +152,6 @@ To avoid cluttering the business code with observability related functionalities
 
 - CaptureReturn - collect data from returned value
 - Capture on records
+- Update EventsCollectorManager test names
+- Create performance tests
+- Create a sample web application

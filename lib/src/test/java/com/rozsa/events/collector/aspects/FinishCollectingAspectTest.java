@@ -26,4 +26,9 @@ public class FinishCollectingAspectTest {
 
         verify(eventsCollectorManager, times(1)).submit();
     }
+
+    @Test
+    void coverPointCutEmptyMethod() {
+        finishCollectingAspect.finishCollectingAnnotation();
+    }
 }
