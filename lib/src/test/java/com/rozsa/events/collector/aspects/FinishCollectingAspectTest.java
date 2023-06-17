@@ -21,7 +21,7 @@ public class FinishCollectingAspectTest {
     private EventsCollectorManager eventsCollectorManager;
 
     @Test
-    void finishCollectingSuccess() throws IOException {
+    void whenFinishCollectingIsCalled_thenSubmitShouldBeCalled() throws IOException {
         finishCollectingAspect.finishCollecting();
 
         verify(eventsCollectorManager, times(1)).submit();

@@ -12,8 +12,7 @@ import java.security.InvalidParameterException;
 
 import static mocks.ProceedingJointPointMockFactory.mockSubmitOnErrorFalse;
 import static mocks.ProceedingJointPointMockFactory.mockSubmitOnErrorTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = { BeginCollectingAspect.class })
@@ -26,7 +25,7 @@ public class BeginCollectingAspectTest {
     private EventsCollectorManager eventsCollectorManager;
 
     @Test
-    void beginCollectingSuccess() throws Throwable {
+    void givenProceedWithReturnValue_whenTargetMethodReturns_thenValueShouldBeReturned() throws Throwable {
         final String expectedObject = "xpto";
         ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
         when(proceedingJoinPoint.proceed()).thenReturn(expectedObject);
@@ -39,7 +38,18 @@ public class BeginCollectingAspectTest {
     }
 
     @Test
-    void beginCollectingErrorShouldCallSubmitWhenFlagIsTrue() throws Throwable {
+    void givenProceedWithoutReturnValue_whenTargetMethodFinishes_thenNoValueShouldBeReturned() throws Throwable {
+        ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+
+        Object returnedObject = beginCollectingAspect.beginCollecting(proceedingJoinPoint);
+
+        assertNull(returnedObject);
+        verify(eventsCollectorManager, times(1)).begin();
+        verify(eventsCollectorManager, times(1)).submit();
+    }
+
+    @Test
+    void givenSubmitOnErrorIsTrue_whenTargetMethodThrows_thenSubmitShouldBeCalled() throws Throwable {
         Class<InvalidParameterException> expectedException = InvalidParameterException.class;
 
         ProceedingJoinPoint proceedingJoinPoint = mockSubmitOnErrorTrue(expectedException);
@@ -54,7 +64,7 @@ public class BeginCollectingAspectTest {
     }
 
     @Test
-    void beginCollectingErrorShouldNotCallSubmitWhenFlagIsFalse() throws Throwable {
+    void givenSubmitOnErrorIsFalse_whenTargetMethodThrows_thenSubmitShouldNotBeCalledAndClearShouldBeCalled() throws Throwable {
         Class<InvalidParameterException> expectedException = InvalidParameterException.class;
 
         ProceedingJoinPoint proceedingJoinPoint = mockSubmitOnErrorFalse(expectedException);

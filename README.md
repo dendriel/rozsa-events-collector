@@ -151,3 +151,4 @@ To avoid cluttering the business code with observability related functionalities
 ## TODO
 
 - CaptureReturn - collect data from returned value
+- Capture on records
