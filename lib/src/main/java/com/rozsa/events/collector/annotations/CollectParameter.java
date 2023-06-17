@@ -1,7 +1,5 @@
 package com.rozsa.events.collector.annotations;
 
-import org.springframework.core.annotation.AliasFor;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CollectParameter {
 
-    @AliasFor("key")
+    // Interchangeable with key.
     String value() default "";
 
     /**
@@ -27,7 +25,7 @@ public @interface CollectParameter {
 
     /**
      * Instead of using the own parameter as the capture value, look for a field from this parameter marked
-     * with @CollectField. Will collect all fields marked from collection inside the parameter.
+     * with @CollectField. Will collect all fields marked for collection inside the parameter.
      * @see CollectField
      */
     boolean scanFields() default false;

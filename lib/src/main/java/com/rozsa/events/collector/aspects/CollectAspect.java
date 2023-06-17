@@ -3,6 +3,7 @@ package com.rozsa.events.collector.aspects;
 import com.rozsa.events.collector.EventsCollectorManager;
 import com.rozsa.events.collector.annotations.CollectField;
 import com.rozsa.events.collector.annotations.CollectParameter;
+import com.rozsa.events.collector.aspects.utils.FieldCollector;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -23,8 +24,9 @@ public class CollectAspect {
         this.eventsCollectorManager = eventsCollectorManager;
     }
 
-    @Pointcut(value="@annotation(com.rozsa.events.collector.annotations.Collect)")
-    public void collectAnnotation() {}
+    @Pointcut(value = "@annotation(com.rozsa.events.collector.annotations.Collect)")
+    public void collectAnnotation() {
+    }
 
     @Before("collectAnnotation()")
     public void collect(final JoinPoint joinPoint) throws IllegalAccessException {
@@ -54,37 +56,23 @@ public class CollectAspect {
             CollectParameter collectParameter = param.getAnnotation(CollectParameter.class);
 
             if (collectParameter.scanFields()) {
-                collectField(value);
+                FieldCollector.collectField(value, eventsCollectorManager);
                 continue;
             }
 
-            String key = collectParameter.key();
+            String key = getKey(collectParameter);
             key = key == null || key.isBlank() ? param.getName() : key;
             eventsCollectorManager.collect(key, value);
         }
     }
 
-    private void collectField(final Object target) throws IllegalAccessException {
-        Class<?> objectClass = target.getClass();
-        Field[] declaredFields = objectClass.getDeclaredFields();
+    private String getKey(final CollectParameter collectParameter) {
+        String key = collectParameter.key();
 
-        for (Field field : declaredFields) {
-            field.setAccessible(true);
-            if (!field.isAnnotationPresent(CollectField.class)) {
-                continue;
-            }
-
-            CollectField collectField = field.getAnnotation(CollectField.class);
-            Object fieldValue = field.get(target);
-
-            if (collectField.scanFields()) {
-                collectField(fieldValue);
-                continue;
-            }
-
-            String key = collectField.key();
-            key = key == null || key.isBlank() ? field.getName() : key;
-            eventsCollectorManager.collect(key, fieldValue);
+        if (key == null || key.isBlank()) {
+            key = collectParameter.value();
         }
+
+        return key;
     }
 }

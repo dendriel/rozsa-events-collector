@@ -152,6 +152,8 @@ To avoid cluttering the business code with observability related functionalities
 
 - CaptureReturn - collect data from returned value
 - Capture on records
-- Update EventsCollectorManager test names
 - Create performance tests
+- Add reflection caching
+- Add custom beans collection (CustomObjectCollector)
 - Create a sample web application
+- Allows to setup multiple flows based on config

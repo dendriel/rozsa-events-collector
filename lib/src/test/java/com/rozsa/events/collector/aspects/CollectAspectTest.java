@@ -11,8 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static mocks.JoinPointMockFactory.*;
-import static mocks.JoinPointMockTypes.*;
+import static mocks.BeforeJoinPointMockFactory.*;
+import static mocks.BeforeJoinPointMockScenarios.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -62,6 +62,16 @@ public class CollectAspectTest {
         collectAspect.collect(joinPoint);
 
         verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_COLLECT_PARAMETER_CUSTOM_KEY), eq(targetValue));
+    }
+
+    @Test
+    void givenSingleCollectParametersInJoinPointWithValueKey_whenCollectIsCalled_thenAnnotatedParameterShouldBeCollected() throws NoSuchMethodException, IllegalAccessException {
+        final String targetValue = "john doe";
+        JoinPoint joinPoint = mockJoinPoint(SINGLE_COLLECT_PARAMETER_CUSTOM_VALUE, List.of(targetValue));
+
+        collectAspect.collect(joinPoint);
+
+        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_COLLECT_PARAMETER_CUSTOM_VALUE_KEY), eq(targetValue));
     }
 
     @Test
