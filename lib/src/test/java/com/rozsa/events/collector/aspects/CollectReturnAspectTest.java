@@ -95,4 +95,9 @@ public class CollectReturnAspectTest {
         verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
         verify(eventsCollectorManager, times(1)).collect(eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
     }
+
+    @Test
+    void coverPointCutEmptyMethod() {
+        collectReturnAspect.collectReturnAnnotation();
+    }
 }

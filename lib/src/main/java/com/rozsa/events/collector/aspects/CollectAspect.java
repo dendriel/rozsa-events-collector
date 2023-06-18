@@ -1,8 +1,9 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
-import com.rozsa.events.collector.annotations.CollectField;
 import com.rozsa.events.collector.annotations.CollectParameter;
+import com.rozsa.events.collector.api.ObjectCollector;
+import com.rozsa.events.collector.cached.ObjectCollectorManager;
 import com.rozsa.events.collector.aspects.utils.FieldCollector;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,7 +12,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -20,8 +20,11 @@ import java.lang.reflect.Parameter;
 public class CollectAspect {
     private final EventsCollectorManager eventsCollectorManager;
 
-    public CollectAspect(EventsCollectorManager eventsCollectorManager) {
+    private final ObjectCollectorManager objectCollectorManager;
+
+    public CollectAspect(EventsCollectorManager eventsCollectorManager, ObjectCollectorManager objectCollectorManager) {
         this.eventsCollectorManager = eventsCollectorManager;
+        this.objectCollectorManager = objectCollectorManager;
     }
 
     @Pointcut(value = "@annotation(com.rozsa.events.collector.annotations.Collect)")
@@ -30,7 +33,6 @@ public class CollectAspect {
 
     @Before("collectAnnotation()")
     public void collect(final JoinPoint joinPoint) throws IllegalAccessException {
-
         Object[] args = joinPoint.getArgs();
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -54,6 +56,13 @@ public class CollectAspect {
 
             final Object value = args[i];
             CollectParameter collectParameter = param.getAnnotation(CollectParameter.class);
+
+            if (!collectParameter.collector().isBlank()) {
+                String collectorName = collectParameter.collector();
+                ObjectCollector collector = objectCollectorManager.getBean(collectorName);
+                collector.collect(value, eventsCollectorManager);
+                return;
+            }
 
             if (collectParameter.scanFields()) {
                 FieldCollector.collectField(value, eventsCollectorManager);

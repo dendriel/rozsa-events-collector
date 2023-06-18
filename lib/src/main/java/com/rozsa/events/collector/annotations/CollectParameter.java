@@ -29,4 +29,9 @@ public @interface CollectParameter {
      * @see CollectField
      */
     boolean scanFields() default false;
+
+    /**
+     * Defines a customized collector bean to fetch data from this parameter.
+     */
+    String collector() default "";
 }

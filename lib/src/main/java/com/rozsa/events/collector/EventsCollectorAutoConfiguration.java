@@ -2,9 +2,11 @@ package com.rozsa.events.collector;
 
 import com.rozsa.events.collector.api.EventsIdGenerator;
 import com.rozsa.events.collector.api.EventsSubmitter;
+import com.rozsa.events.collector.cached.ObjectCollectorManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +33,11 @@ public class EventsCollectorAutoConfiguration {
             ) {
 
         return new EventsCollectorManager(id, eventsIdGenerator, eventsSubmitter);
+    }
+
+    @Bean
+    public ObjectCollectorManager provideObjectCollectorManager(final ApplicationContext applicationContext) {
+        return new ObjectCollectorManager(applicationContext);
     }
 
     @Bean

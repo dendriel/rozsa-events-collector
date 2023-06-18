@@ -11,6 +11,7 @@ public enum BeforeJoinPointMockScenarios {
     MULTI_COLLECT_PARAMETER("multipleCollectParameter",  List.of(String.class, String.class, Integer.class, String.class)),
     SCAN_FIELD_COLLECT_PARAMETER("scanFieldCollectParameter", List.of(CollectObjectMock.class)),
     RECURSIVE_SCAN_FIELD_COLLECT_PARAMETER("recursiveScanFieldCollectParameter", List.of(RecursiveCollectObjectMock.class)),
+    CUSTOM_OBJECT_COLLECTION_PARAMETER("customObjectCollectionParameter", List.of(ObjectForCustomCollection.class)),
     ;
 
     private final String method;

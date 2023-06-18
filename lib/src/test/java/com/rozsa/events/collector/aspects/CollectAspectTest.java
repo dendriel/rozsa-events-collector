@@ -1,13 +1,17 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
+import com.rozsa.events.collector.cached.ObjectCollectorManager;
 import mocks.CollectObjectMock;
+import mocks.ObjectCollectorsConfiguration;
+import mocks.ObjectForCustomCollection;
 import mocks.RecursiveCollectObjectMock;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
 
@@ -18,13 +22,16 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest(classes = { CollectAspect.class })
+@SpringBootTest(classes = { CollectAspect.class, ObjectCollectorsConfiguration.class, ObjectCollectorManager.class })
 public class CollectAspectTest {
     @Autowired
     private CollectAspect collectAspect;
 
     @MockBean
     private EventsCollectorManager eventsCollectorManager;
+
+    @SpyBean
+    private ObjectCollectorsConfiguration objectCollectorsConfiguration;
 
     @Test
     void givenNoParametersInJoinPoint_whenCollectIsCalled_thenNothingShouldHappen() throws NoSuchMethodException, IllegalAccessException {
@@ -118,6 +125,23 @@ public class CollectAspectTest {
         verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
         verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
         verify(eventsCollectorManager, times(1)).collect(eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
+    }
+
+    @Test
+    void givenCustomObjectCollector_whenCollectIsCalled_thenCustomObjectCollectorShouldBeUsedToCollect() throws NoSuchMethodException, IllegalAccessException {
+        final String name = "Thomas A. Anderson";
+        final Integer age = 28;
+        final List<String> hobbies = List.of("Entering the Matrix", "Fighting Agent Smith", "Hacking");
+        ObjectForCustomCollection objectForCustomCollection = new ObjectForCustomCollection(name, age, hobbies);
+
+        final String expectedValue = ObjectCollectorsConfiguration.formatCollectedValue(objectForCustomCollection);
+
+        JoinPoint joinPoint = mockJoinPoint(CUSTOM_OBJECT_COLLECTION_PARAMETER, List.of(objectForCustomCollection));
+
+        collectAspect.collect(joinPoint);
+
+        verify(eventsCollectorManager, times(1)).collect(eq(
+                ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR_KEY), eq(expectedValue));
     }
 
     @Test

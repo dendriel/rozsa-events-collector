@@ -150,10 +150,8 @@ To avoid cluttering the business code with observability related functionalities
 
 ## TODO
 
-- CaptureReturn - collect data from returned value
+- Allows to setup multiple flows based on config
 - Capture on records
 - Create performance tests
 - Add reflection caching
-- Add custom beans collection (CustomObjectCollector)
 - Create a sample web application
-- Allows to setup multiple flows based on config

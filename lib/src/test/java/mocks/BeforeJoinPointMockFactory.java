@@ -64,4 +64,8 @@ public class BeforeJoinPointMockFactory {
     public static void recursiveScanFieldCollectParameter(
             @CollectParameter(scanFields = true) RecursiveCollectObjectMock parameterName01
     ) {}
+
+    public static void customObjectCollectionParameter(
+            @CollectParameter(collector = ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR) ObjectForCustomCollection parameterName01
+    ) {}
 }
