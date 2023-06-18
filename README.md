@@ -155,3 +155,4 @@ To avoid cluttering the business code with observability related functionalities
 - Create performance tests
 - Add reflection caching
 - Create a sample web application
+- Add CI to project.

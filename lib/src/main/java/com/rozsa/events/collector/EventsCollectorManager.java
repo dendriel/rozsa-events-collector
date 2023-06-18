@@ -2,18 +2,19 @@ package com.rozsa.events.collector;
 
 import com.rozsa.events.collector.api.EventsIdGenerator;
 import com.rozsa.events.collector.api.EventsSubmitter;
+import com.rozsa.events.collector.context.CollectionContextHandler;
+import com.rozsa.events.collector.context.api.CollectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class EventsCollectorManager {
     public static final Logger log = LoggerFactory.getLogger(EventsCollectorManager.class);
-
-    private static final ThreadLocal<CollectionContext> collectionContext = ThreadLocal.withInitial(CollectionContext::new);
+    private static final ThreadLocal<CollectionContextHandler> collections = ThreadLocal.withInitial(CollectionContextHandler::new);
+    private static final String defaultFlow = "default";
 
     private final String idFieldKey;
     private final EventsIdGenerator eventsIdGenerator;
@@ -30,70 +31,76 @@ public class EventsCollectorManager {
     }
 
     public void begin() {
-        log.debug("Begin collecting event data.");
+        begin(defaultFlow);
+    }
 
-        clear();
+    public void begin(final String flow) {
+        log.debug("[flow:{}] Begin collecting event data.", flow);
+
+        getCollectionContextHandler().initialize(flow);
+
         Object id = eventsIdGenerator.generate();
-        collect(idFieldKey, id);
+        collect(flow, idFieldKey, id);
 
-        log.debug("Collection context has initialized. Current event ID is '{}={}'", idFieldKey, id);
+        log.debug("[flow:{}] Collection context has initialized. Current event ID is '{}={}'", flow, idFieldKey, id);
     }
 
     /**
      * Clears all saved event data, including generated ID. Should be used carefully.
      */
     public void clear() {
-        log.debug("Clearing the event data.");
+        clear(defaultFlow);
+    }
 
-        collectionContext.get().clear();
+    public void clear(final String flow) {
+        log.debug("[flow:{}] Clearing the event data.", flow);
+
+        getFlow(flow).clear();
+    }
+
+    public void clearAll() {
+        getCollectionContextHandler().clearAll();
     }
 
     public void collect(final String key, final Object value) {
-        log.debug("Collection event data '{}={}'", key, value);
+        collect(defaultFlow, key, value);
+    }
 
-        collectionContext.get().add(key, value);
+    public void collect(final String flow, final String key, final Object value) {
+        log.debug("[flow:{}] Collection event data '{}={}'", flow, key, value);
+
+       getFlow(flow).add(key, value);
     }
 
     public void submit() throws IOException {
-        log.debug("Submitting the event to remote server.");
+        submit(defaultFlow);
+    }
 
-        eventsSubmitter.submit(collectionContext.get().getCollection());
+    public void submit(final String flow) throws IOException {
+        log.debug("[flow:{}] Submitting the event to remote server.", flow);
 
-        clear();
+        eventsSubmitter.submit(getFlow(flow).getCollection());
+
+        clear(flow);
     }
 
     /**
      * @return Creates and returns a shallow copy of the collected data so far.
      */
     public Set<Map.Entry<String, Object>> getCollection() {
-        return collectionContext.get().getCollection().entrySet();
+        return getCollection(defaultFlow);
     }
 
-    /**
-     * Collected data storage context.
-     */
-    public static class CollectionContext {
-        private final Map<String, Object> collection;
+    public Set<Map.Entry<String, Object>> getCollection(final String flow) {
+        return getFlow(flow).getCollection().entrySet();
+    }
 
-        public CollectionContext() {
-            this.collection = new HashMap<>();
-        }
+    private CollectionContext getFlow(final String flow) {
+        return collections.get().get(flow);
+    }
 
-        public void add(final String key, final Object value) {
-            if (key == null || key.isBlank()) {
-                throw new IllegalArgumentException("Can't use an empty key to collect data.");
-            }
-
-            collection.put(key, value);
-        }
-
-        public Map<String, Object> getCollection() {
-            return collection;
-        }
-
-        public void clear() {
-            collection.clear();
-        }
+    private CollectionContextHandler getCollectionContextHandler() {
+        return collections.get();
     }
 }
 

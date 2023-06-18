@@ -33,7 +33,7 @@ public class EventsCollectorManagerIntegrationTest {
     @BeforeEach
     void setup() {
         // Collection Context is static, so we have to clean it manually.
-        eventsCollectorManager.clear();
+        eventsCollectorManager.clearAll();
     }
 
     @Test
@@ -146,7 +146,6 @@ public class EventsCollectorManagerIntegrationTest {
 
     @Test
     void givenDataCollected_whenSubmitIsCalled_thenRemoteServerShouldBeCalledAndCollectionIsCleared() throws IOException, InterruptedException {
-
         stubFor(post(urlMatching("/collect"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
@@ -169,5 +168,154 @@ public class EventsCollectorManagerIntegrationTest {
 
         Set<Map.Entry<String, Object>> collection = eventsCollectorManager.getCollection();
         assertEquals(0, collection.size());
+    }
+
+    @Test
+    void givenMultipleFlowsCollected_whenSubmitIsCalledForAFlow_thenExpectedDataShouldBePublished() throws IOException, InterruptedException {
+        stubFor(post(urlMatching("/collect"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.SC_OK)
+                )
+        );
+
+        eventsCollectorManager.begin();
+        eventsCollectorManager.collect("key01", 123);
+        eventsCollectorManager.collect("key02", false);
+
+
+        final String flow02Name = "flow02";
+        final String key = "foo";
+        final String value = "bar";
+
+        eventsCollectorManager.begin(flow02Name);
+        eventsCollectorManager.collect(flow02Name, key, value);
+        eventsCollectorManager.submit(flow02Name);
+
+        verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                        .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
+                        .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
+                1000
+        );
+
+        Set<Map.Entry<String, Object>> collection = eventsCollectorManager.getCollection(flow02Name);
+        assertEquals(0, collection.size());
+    }
+
+    @Test
+    void givenMultipleFlowsCollected_whenSubmitIsCalledForDefaultFlow_thenExpectedDataShouldBePublished() throws IOException, InterruptedException {
+        stubFor(post(urlMatching("/collect"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.SC_OK)
+                )
+        );
+
+        final String flow02Name = "flow02";
+        final String key = "foo";
+        final String value = "bar";
+
+        eventsCollectorManager.begin(flow02Name);
+        eventsCollectorManager.collect(flow02Name, "key01", 123);
+        eventsCollectorManager.collect(flow02Name, "key02", false);
+
+        eventsCollectorManager.begin();
+        eventsCollectorManager.collect(key, value);
+        eventsCollectorManager.submit();
+
+        verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                        .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
+                        .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
+                1000
+        );
+
+        Set<Map.Entry<String, Object>> collection = eventsCollectorManager.getCollection();
+        assertEquals(0, collection.size());
+    }
+
+    @Test
+    void givenMultipleFlowsInitialized_whenCollectIsCalledForAFlow_thenCollectedDataShouldBeSaveInTargetFlow() {
+        final String flow02Name = "flow02";
+        final String flow03Name = "flow03";
+
+        // default flow
+        eventsCollectorManager.begin();
+        eventsCollectorManager.collect("def_key_01", "bar");
+        eventsCollectorManager.collect("def_key_02", 1234);
+
+        eventsCollectorManager.begin(flow02Name);
+        eventsCollectorManager.collect(flow02Name, "fl02_key_01", true);
+        eventsCollectorManager.collect(flow02Name, "fl02_key_02", 33.44f);
+
+        eventsCollectorManager.begin(flow03Name);
+        eventsCollectorManager.collect(flow03Name, "fl03_key_01", 90000L);
+
+        // randomly collect data.
+        eventsCollectorManager.collect(flow02Name, "fl02_key_03", "xxxxx");
+        eventsCollectorManager.collect(flow03Name, "fl03_key_02", "key 2");
+        eventsCollectorManager.collect(flow02Name, "fl02_key_04", 90.001D);
+        eventsCollectorManager.collect("def_key_04", 456);
+
+        // Each flow is initialized with an ID entry (thus, expected value is always plus 1).
+
+        assertEquals(4, eventsCollectorManager.getCollection().size());
+        assertEquals(5, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(3, eventsCollectorManager.getCollection(flow03Name).size());
+    }
+
+    @Test
+    void givenMultipleFlowsCollected_whenSubmitIsCalledForAFlow_thenOtherFlowsShouldNotBeAffected() throws IOException {
+        final String flow02Name = "flow02";
+        final String flow03Name = "flow03";
+
+        // default flow
+        eventsCollectorManager.begin();
+        eventsCollectorManager.collect("def_key_01", "bar");
+
+        eventsCollectorManager.begin(flow02Name);
+        eventsCollectorManager.collect(flow02Name, "fl02_key_01", true);
+
+        eventsCollectorManager.begin(flow03Name);
+        eventsCollectorManager.collect(flow03Name, "fl03_key_01", 90000L);
+
+        eventsCollectorManager.submit();
+
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(2, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(2, eventsCollectorManager.getCollection(flow03Name).size());
+
+        eventsCollectorManager.submit(flow03Name);
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(2, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow03Name).size());
+
+        eventsCollectorManager.submit(flow02Name);
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow03Name).size());
+    }
+
+    @Test
+    void givenMultipleFlowsCollected_whenClearIsCalledForAFlow_thenOtherFlowsShouldNotBeAffected() {
+        final String flow02Name = "flow02";
+        final String flow03Name = "flow03";
+
+        eventsCollectorManager.begin();
+        eventsCollectorManager.begin(flow02Name);
+        eventsCollectorManager.begin(flow03Name);
+
+        eventsCollectorManager.clear();
+
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(1, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(1, eventsCollectorManager.getCollection(flow03Name).size());
+
+        eventsCollectorManager.clear(flow03Name);
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(1, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow03Name).size());
+
+        eventsCollectorManager.clear(flow02Name);
+        assertEquals(0, eventsCollectorManager.getCollection().size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow02Name).size());
+        assertEquals(0, eventsCollectorManager.getCollection(flow03Name).size());
     }
 }
