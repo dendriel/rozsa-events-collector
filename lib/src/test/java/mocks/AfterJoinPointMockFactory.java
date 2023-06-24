@@ -1,6 +1,7 @@
 package mocks;
 
 import com.rozsa.events.collector.annotations.CollectReturn;
+import com.rozsa.events.collector.annotations.FinishCollecting;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -11,9 +12,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AfterJoinPointMockFactory {
-
+    public static final String AFTER_FIRST_CUSTOM_FLOW_NAME = "customFlow01";
     public static final String SINGLE_RETURN_CLASS_TYPE = String.class.getName();
-
     public static final String SINGLE_RETURN_KEY_VALUE = "single_return_key";
 
     public static JoinPoint mockJoinPoint(final AfterJoinPointMockScenarios scenario) throws NoSuchMethodException {
@@ -36,6 +36,9 @@ public class AfterJoinPointMockFactory {
     @CollectReturn
     public static String stringReturnCollectReturnAnnotation() { return ""; }
 
+    @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME)
+    public static String customFlowStringReturnCollectReturnAnnotation() { return ""; }
+
     @CollectReturn(SINGLE_RETURN_KEY_VALUE)
     public static String stringReturnWithKeyCollectReturnAnnotation() { return ""; }
 
@@ -45,6 +48,18 @@ public class AfterJoinPointMockFactory {
     @CollectReturn(scanFields = true)
     public static CollectObjectMock returnWithScanFieldsTrueCollectReturnAnnotation() { return null; }
 
+    @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME, scanFields = true)
+    public static CollectObjectMock customFlowReturnWithScanFieldsTrueCollectReturnAnnotation() { return null; }
+
     @CollectReturn(scanFields = true)
     public static RecursiveCollectObjectMock returnWithRecursiveScanFieldsTrueCollectReturnAnnotation() { return null; }
+
+    @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME, scanFields = true)
+    public static RecursiveCollectObjectMock customFlowReturnWithRecursiveScanFieldsTrueCollectReturnAnnotation() { return null; }
+
+    @FinishCollecting
+    public static String finishCollectionAnnotation() { return ""; }
+
+    @FinishCollecting(flow = AFTER_FIRST_CUSTOM_FLOW_NAME)
+    public static String customFlowFinishCollectionAnnotation() { return ""; }
 }

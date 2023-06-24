@@ -151,6 +151,7 @@ To avoid cluttering the business code with observability related functionalities
 ## TODO
 
 - Allow to setup multiple flows from annotations
+- Allow collector on CollectReturn
 - Allow to setup multiple flows based on config
 - Capture on records
 - Create performance tests

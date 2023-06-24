@@ -102,7 +102,7 @@ public class CollectAspectCustomFlowTest {
     }
 
     @Test
-    void givenCustomFlowParamOverride_whenCollectIsCalled_thenParamCustomizedFlowValueShouldBeUsed() throws NoSuchMethodException, IllegalAccessException {
+    void givenCustomFlowParamOverride_whenCollectIsCalled_thenCustomizedFlowValueShouldBeUsed() throws NoSuchMethodException, IllegalAccessException {
         final String targetValue01 = "john doe";
         final Integer targetValue02 = 1999;
         JoinPoint joinPoint = mockJoinPoint(CUSTOM_FLOW_PARAM_OVERRIDE_MULTI_COLLECT_PARAMETER, List.of(targetValue01, "dumb", targetValue02, "dummy"));
