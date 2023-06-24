@@ -12,7 +12,7 @@ public class CollectObjectMock {
     private final Boolean finalFieldKey;
 
     @CollectField(key = FIELD_CUSTOM_KEY)
-    public Double finalFieldCustomKey;
+    public Double fieldCustomKey;
 
     private String randomField01;
 
@@ -20,8 +20,8 @@ public class CollectObjectMock {
 
     public List<Boolean> randomField03;
 
-    public CollectObjectMock(Boolean finalFieldKey, Double finalFieldCustomKey) {
+    public CollectObjectMock(Boolean finalFieldKey, Double fieldCustomKey) {
         this.finalFieldKey = finalFieldKey;
-        this.finalFieldCustomKey = finalFieldCustomKey;
+        this.fieldCustomKey = fieldCustomKey;
     }
 }

@@ -19,11 +19,11 @@ public class ObjectCollectorsConfiguration {
 
     @Bean(CUSTOM_OBJECT_COLLECTOR)
     public ObjectCollector createTestingObjectCollector() {
-        return (Object source, EventsCollectorManager eventsCollectorManager) -> {
+        return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {
             ObjectForCustomCollection target = (ObjectForCustomCollection) source;
 
             String value = formatCollectedValue(target);
-            eventsCollectorManager.collect(CUSTOM_OBJECT_COLLECTOR_KEY, value);
+            eventsCollectorManager.collect(flow, CUSTOM_OBJECT_COLLECTOR_KEY, value);
         };
     }
 

@@ -12,6 +12,6 @@ public class AnotherObjectCollectorsConfiguration {
 
     @Bean(ANOTHER_CUSTOM_OBJECT_COLLECTOR)
     public ObjectCollector createAnotherTestingObjectCollector() {
-        return (Object source, EventsCollectorManager eventsCollectorManager) -> {};
+        return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {};
     }
 }

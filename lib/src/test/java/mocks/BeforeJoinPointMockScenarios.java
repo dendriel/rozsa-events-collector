@@ -12,6 +12,13 @@ public enum BeforeJoinPointMockScenarios {
     SCAN_FIELD_COLLECT_PARAMETER("scanFieldCollectParameter", List.of(CollectObjectMock.class)),
     RECURSIVE_SCAN_FIELD_COLLECT_PARAMETER("recursiveScanFieldCollectParameter", List.of(RecursiveCollectObjectMock.class)),
     CUSTOM_OBJECT_COLLECTION_PARAMETER("customObjectCollectionParameter", List.of(ObjectForCustomCollection.class)),
+    CUSTOM_FLOW_SINGLE_COLLECT_PARAMETER("customFlowSingleCollectParameterAnnotation", List.of(String.class)),
+    CUSTOM_FLOW_MULTI_COLLECT_PARAMETER("customFlowMultipleCollectParameter",  List.of(String.class, String.class, Integer.class, String.class)),
+    CUSTOM_FLOW_SCAN_FIELD_COLLECT_PARAMETER("customFlowScanFieldCollectParameter", List.of(CollectObjectMock.class)),
+    CUSTOM_FLOW_RECURSIVE_SCAN_FIELD_COLLECT_PARAMETER("customFlowRecursiveScanFieldCollectParameter", List.of(RecursiveCollectObjectMock.class)),
+    CUSTOM_FLOW_CUSTOM_OBJECT_COLLECTION_PARAMETER("customFlowCustomObjectCollectionParameter", List.of(ObjectForCustomCollection.class)),
+    CUSTOM_FLOW_PARAM_OVERRIDE_MULTI_COLLECT_PARAMETER("customFlowParamOverrideMultipleCollectParameter",  List.of(String.class, String.class, Integer.class, String.class)),
+    CUSTOM_FLOW_FIELD_OVERRIDE_SCAN_FIELD_COLLECT_PARAMETER("customFlowFieldOverrideScanFieldCollectParameter", List.of(CustomFlowCollectObjectMock.class)),
     ;
 
     private final String method;

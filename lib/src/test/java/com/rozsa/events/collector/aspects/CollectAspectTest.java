@@ -6,12 +6,12 @@ import mocks.CollectObjectMock;
 import mocks.ObjectCollectorsConfiguration;
 import mocks.ObjectForCustomCollection;
 import mocks.RecursiveCollectObjectMock;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
 
@@ -30,16 +30,13 @@ public class CollectAspectTest {
     @MockBean
     private EventsCollectorManager eventsCollectorManager;
 
-    @SpyBean
-    private ObjectCollectorsConfiguration objectCollectorsConfiguration;
-
     @Test
     void givenNoParametersInJoinPoint_whenCollectIsCalled_thenNothingShouldHappen() throws NoSuchMethodException, IllegalAccessException {
         JoinPoint joinPoint = mockJoinPoint(MISSING_PARAMETERS);
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(0)).collect(any(), any());
+        verify(eventsCollectorManager, times(0)).collect(any(), any(), any());
     }
 
     @Test
@@ -48,7 +45,7 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(0)).collect(any(), any());
+        verify(eventsCollectorManager, times(0)).collect(any(), any(), any());
     }
 
     @Test
@@ -58,7 +55,7 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_COLLECT_PARAMETER_DEFAULT_KEY), eq(targetValue));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_COLLECT_PARAMETER_DEFAULT_KEY), eq(targetValue));
     }
 
     @Test
@@ -68,7 +65,7 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_COLLECT_PARAMETER_CUSTOM_KEY), eq(targetValue));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_COLLECT_PARAMETER_CUSTOM_KEY), eq(targetValue));
     }
 
     @Test
@@ -78,7 +75,7 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_COLLECT_PARAMETER_CUSTOM_VALUE_KEY), eq(targetValue));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_COLLECT_PARAMETER_CUSTOM_VALUE_KEY), eq(targetValue));
     }
 
     @Test
@@ -89,9 +86,9 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(2)).collect(any(), any());
-        verify(eventsCollectorManager, times(1)).collect(eq(FIST_PARAMETER_KEY), eq(targetValue01));
-        verify(eventsCollectorManager, times(1)).collect(eq(THIRD_PARAMETER_KEY), eq(targetValue02));
+        verify(eventsCollectorManager, times(2)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(FIST_PARAMETER_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(THIRD_PARAMETER_KEY), eq(targetValue02));
     }
 
     @Test
@@ -103,9 +100,9 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(2)).collect(any(), any());
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
+        verify(eventsCollectorManager, times(2)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
     }
 
     @Test
@@ -121,10 +118,10 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(3)).collect(any(), any());
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
-        verify(eventsCollectorManager, times(1)).collect(eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
+        verify(eventsCollectorManager, times(3)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
     }
 
     @Test
@@ -140,8 +137,8 @@ public class CollectAspectTest {
 
         collectAspect.collect(joinPoint);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(
-                ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR_KEY), eq(expectedValue));
+        verify(eventsCollectorManager, times(1)).collect(
+                eq(StringUtils.EMPTY), eq(ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR_KEY), eq(expectedValue));
     }
 
     @Test

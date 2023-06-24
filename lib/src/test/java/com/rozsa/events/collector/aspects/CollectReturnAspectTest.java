@@ -4,6 +4,7 @@ import com.rozsa.events.collector.EventsCollectorManager;
 import mocks.AfterJoinPointMockScenarios;
 import mocks.CollectObjectMock;
 import mocks.RecursiveCollectObjectMock;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, returnedValue);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_RETURN_CLASS_TYPE), eq(returnedValue));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_RETURN_CLASS_TYPE), eq(returnedValue));
     }
 
     @Test
@@ -41,7 +42,7 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, null);
 
-        verify(eventsCollectorManager, times(0)).collect(any(), any());
+        verify(eventsCollectorManager, times(0)).collect(any(), any(), any());
     }
 
     @Test
@@ -50,7 +51,7 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, null);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_RETURN_KEY_VALUE), eq(null));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_RETURN_KEY_VALUE), eq(null));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, null);
 
-        verify(eventsCollectorManager, times(1)).collect(eq(SINGLE_RETURN_KEY_VALUE), eq(null));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(SINGLE_RETURN_KEY_VALUE), eq(null));
     }
 
     @Test
@@ -72,9 +73,9 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, captureObjectMock);
 
-        verify(eventsCollectorManager, times(2)).collect(any(), any());
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
+        verify(eventsCollectorManager, times(2)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
     }
 
     @Test
@@ -90,10 +91,10 @@ public class CollectReturnAspectTest {
 
         collectReturnAspect.collect(joinPoint, recursiveCollectObjectMock);
 
-        verify(eventsCollectorManager, times(3)).collect(any(), any());
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
-        verify(eventsCollectorManager, times(1)).collect(eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
-        verify(eventsCollectorManager, times(1)).collect(eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
+        verify(eventsCollectorManager, times(3)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue03));
     }
 
     @Test

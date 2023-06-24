@@ -1,6 +1,7 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
+import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectReturn;
 import com.rozsa.events.collector.aspects.utils.FieldCollector;
 import org.aspectj.lang.JoinPoint;
@@ -29,10 +30,11 @@ public class CollectReturnAspect {
 
     @AfterReturning(value="collectReturnAnnotation()", returning="value")
     public void collect(final JoinPoint joinPoint, final Object value) throws IllegalAccessException {
+        final String flow = getFlow(joinPoint);
         CollectReturn collectReturn = getAnnotationFrom(CollectReturn.class, joinPoint);
 
         if (collectReturn.scanFields()) {
-            FieldCollector.collectField(value, eventsCollectorManager);
+            FieldCollector.collectField(flow, value, eventsCollectorManager);
             return;
         }
 
@@ -47,7 +49,7 @@ public class CollectReturnAspect {
             key = value.getClass().getName();
         }
 
-        eventsCollectorManager.collect(key, value);
+        eventsCollectorManager.collect(flow, key, value);
     }
 
     private String getKey(final CollectReturn collectReturn) {
@@ -58,5 +60,10 @@ public class CollectReturnAspect {
         }
 
         return key;
+    }
+
+    private String getFlow(final JoinPoint joinPoint) {
+        CollectReturn collectReturn = getAnnotationFrom(CollectReturn.class, joinPoint);
+        return collectReturn != null ? collectReturn.flow() : "";
     }
 }

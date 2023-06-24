@@ -49,5 +49,5 @@ public class ObjectCollectorManager {
         return collector;
     }
 
-    private void emptyCollector(Object source, EventsCollectorManager eventsCollectorManager) {}
+    private void emptyCollector(String flow, Object source, EventsCollectorManager eventsCollectorManager) {}
 }

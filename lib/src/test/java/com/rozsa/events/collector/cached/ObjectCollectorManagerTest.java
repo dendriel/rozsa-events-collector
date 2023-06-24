@@ -66,7 +66,7 @@ public class ObjectCollectorManagerTest {
         final String testCollectorBean = "test-collector";
 
         when(applicationContext.getBean(testCollectorBean, ObjectCollector.class))
-                .thenReturn((v, m) -> {});
+                .thenReturn((f, v, m) -> {});
         objectCollectorManager = new ObjectCollectorManager(applicationContext);
 
         // first call to cache the bean.
@@ -98,7 +98,7 @@ public class ObjectCollectorManagerTest {
     @Test
     void coverEmptyCollector() {
         ObjectCollector emptyCollector = objectCollectorManager.getBean("nonexisting-bean");
-        emptyCollector.collect(null, null);
+        emptyCollector.collect(null, null, null);
     }
 }
 

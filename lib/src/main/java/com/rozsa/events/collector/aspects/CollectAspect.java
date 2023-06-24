@@ -1,6 +1,7 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
+import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectParameter;
 import com.rozsa.events.collector.api.ObjectCollector;
 import com.rozsa.events.collector.cached.ObjectCollectorManager;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+
+import static com.rozsa.events.collector.aspects.utils.AnnotationUtils.getAnnotationFrom;
 
 @Aspect
 @Component
@@ -33,6 +36,7 @@ public class CollectAspect {
 
     @Before("collectAnnotation()")
     public void collect(final JoinPoint joinPoint) throws IllegalAccessException {
+        final String flow = getFlow(joinPoint);
         Object[] args = joinPoint.getArgs();
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -60,18 +64,19 @@ public class CollectAspect {
             if (!collectParameter.collector().isBlank()) {
                 String collectorName = collectParameter.collector();
                 ObjectCollector collector = objectCollectorManager.getBean(collectorName);
-                collector.collect(value, eventsCollectorManager);
+                collector.collect(flow, value, eventsCollectorManager);
                 return;
             }
 
             if (collectParameter.scanFields()) {
-                FieldCollector.collectField(value, eventsCollectorManager);
+                FieldCollector.collectField(flow, value, eventsCollectorManager);
                 continue;
             }
 
+            String targetFlow = collectParameter.flow().isBlank() ? flow : collectParameter.flow();
             String key = getKey(collectParameter);
             key = key == null || key.isBlank() ? param.getName() : key;
-            eventsCollectorManager.collect(key, value);
+            eventsCollectorManager.collect(targetFlow, key, value);
         }
     }
 
@@ -83,5 +88,10 @@ public class CollectAspect {
         }
 
         return key;
+    }
+
+    private String getFlow(final JoinPoint joinPoint) {
+        Collect collect = getAnnotationFrom(Collect.class, joinPoint);
+        return collect != null ? collect.flow() : "";
     }
 }

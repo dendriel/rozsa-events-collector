@@ -7,8 +7,9 @@ public interface ObjectCollector {
 
     /**
      * Defines custom logic for collecting data from an object
+     * @param flow
      * @param source Original object market for collection.
      * @param eventsCollectorManager collection manager to collect data.
      */
-    void collect(Object source, EventsCollectorManager eventsCollectorManager);
+    void collect(String flow, Object source, EventsCollectorManager eventsCollectorManager);
 }
