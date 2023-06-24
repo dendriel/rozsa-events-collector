@@ -15,4 +15,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FinishCollecting {
+    /**
+     * Target collection flow to be finished.
+     */
+    String flow() default "";
 }

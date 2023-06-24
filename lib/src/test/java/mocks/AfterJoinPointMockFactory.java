@@ -10,22 +10,22 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AfterJointPointMockFactory {
+public class AfterJoinPointMockFactory {
 
     public static final String SINGLE_RETURN_CLASS_TYPE = String.class.getName();
 
     public static final String SINGLE_RETURN_KEY_VALUE = "single_return_key";
 
-    public static JoinPoint mockJoinPoint(final AfterJoinPointMockScenarios mockType) throws NoSuchMethodException {
-        return mockJoinPoint(mockType, List.of());
+    public static JoinPoint mockJoinPoint(final AfterJoinPointMockScenarios scenario) throws NoSuchMethodException {
+        return mockJoinPoint(scenario, List.of());
     }
 
-    public static JoinPoint mockJoinPoint(final AfterJoinPointMockScenarios mockType, final List<Object> args) throws NoSuchMethodException {
+    public static JoinPoint mockJoinPoint(final AfterJoinPointMockScenarios scenario, final List<Object> args) throws NoSuchMethodException {
         JoinPoint joinPoint = mock(JoinPoint.class);
         when(joinPoint.getArgs()).thenReturn(args.toArray());
 
         MethodSignature methodSignature = mock(MethodSignature.class);
-        Method method = AfterJointPointMockFactory.class.getDeclaredMethod(mockType.getMethod(), mockType.getParameters().toArray(new Class[0]));
+        Method method = AfterJoinPointMockFactory.class.getDeclaredMethod(scenario.getMethod(), scenario.getParameters().toArray(new Class[0]));
 
         when(methodSignature.getMethod()).thenReturn(method);
         when(joinPoint.getSignature()).thenReturn(methodSignature);

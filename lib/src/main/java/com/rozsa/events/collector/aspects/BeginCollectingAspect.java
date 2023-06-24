@@ -27,27 +27,33 @@ public class BeginCollectingAspect {
 
     @Around("beginCollectingAnnotation()")
     public Object beginCollecting(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        eventsCollectorManager.begin();
+        final String flow = getFlow(proceedingJoinPoint);
+        eventsCollectorManager.begin(flow);
 
         Object result;
         try {
              result = proceedingJoinPoint.proceed();
         } catch (Exception e) {
-            submitOnError(proceedingJoinPoint);
+            submitOnError(proceedingJoinPoint, flow);
             throw e;
         }
 
-        eventsCollectorManager.submit();
+        eventsCollectorManager.submit(flow);
         return result;
     }
 
-    private void submitOnError(final JoinPoint joinPoint) throws IOException {
+    private void submitOnError(final JoinPoint joinPoint, final String flow) throws IOException {
         BeginCollecting beginCollecting = getAnnotationFrom(BeginCollecting.class, joinPoint);
         if (beginCollecting.submitOnError()) {
-            eventsCollectorManager.submit();
+            eventsCollectorManager.submit(flow);
         }
         else {
-            eventsCollectorManager.clear();
+            eventsCollectorManager.clear(flow);
         }
+    }
+
+    private String getFlow(final JoinPoint joinPoint) {
+        BeginCollecting beginCollecting = getAnnotationFrom(BeginCollecting.class, joinPoint);
+        return beginCollecting != null ? beginCollecting.flow() : "";
     }
 }

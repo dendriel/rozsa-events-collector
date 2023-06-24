@@ -150,7 +150,8 @@ To avoid cluttering the business code with observability related functionalities
 
 ## TODO
 
-- Allows to setup multiple flows based on config
+- Allow to setup multiple flows from annotations
+- Allow to setup multiple flows based on config
 - Capture on records
 - Create performance tests
 - Add reflection caching

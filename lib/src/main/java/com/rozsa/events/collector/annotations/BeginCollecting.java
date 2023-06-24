@@ -23,4 +23,9 @@ public @interface BeginCollecting {
      * Should submit the event even if an exception is throw?
      */
     boolean submitOnError() default true;
+
+    /**
+     * Target collection flow.
+     */
+    String flow() default "";
 }

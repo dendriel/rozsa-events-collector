@@ -1,7 +1,5 @@
 package com.rozsa.events.collector.annotations;
 
-import org.springframework.core.annotation.AliasFor;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,4 +26,12 @@ public @interface CollectReturn {
      * @see CollectField
      */
     boolean scanFields() default false;
+
+    /**
+     * Target collection flow.
+     * Must be specified if it is necessary to collect for a custom flow.
+     * WARNING: it won't use the flow specified in Collect annotation (if any)!
+     * @see Collect
+     */
+    String flow() default "";
 }

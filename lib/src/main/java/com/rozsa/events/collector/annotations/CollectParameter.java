@@ -34,4 +34,11 @@ public @interface CollectParameter {
      * Defines a customized collector bean to fetch data from this parameter.
      */
     String collector() default "";
+
+    /**
+     * Target collection flow.
+     * Takes precedence over @Collect annotation
+     * @see Collect
+     */
+    String flow() default "";
 }

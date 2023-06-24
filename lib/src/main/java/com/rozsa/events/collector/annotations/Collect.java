@@ -11,4 +11,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Collect {
+    /**
+     * Target collection flow.
+     * May be overridden if specified on parameter or field annotations.
+     * WARNING: the flow defined by this annotation won't affect the @CollectReturn annotation (if specified).
+     * @see CollectParameter
+     * @see CollectField
+     * @see CollectReturn
+     */
+    String flow() default "";
 }

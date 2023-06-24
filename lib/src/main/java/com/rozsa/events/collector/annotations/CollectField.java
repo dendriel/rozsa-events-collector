@@ -30,4 +30,11 @@ public @interface CollectField {
      * @see CollectField
      */
     boolean scanFields() default false;
+
+    /**
+     * Target collection flow.
+     * Takes precedence over @Collect annotation
+     * @see Collect
+     */
+    String flow() default "";
 }

@@ -2,7 +2,6 @@ package com.rozsa.events.collector.aspects.utils;
 
 import com.rozsa.events.collector.EventsCollectorManager;
 import com.rozsa.events.collector.annotations.CollectField;
-import com.rozsa.events.collector.annotations.CollectReturn;
 
 import java.lang.reflect.Field;
 
