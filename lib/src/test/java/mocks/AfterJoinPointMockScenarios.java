@@ -13,6 +13,8 @@ public enum AfterJoinPointMockScenarios {
     CUSTOM_FLOW_RETURN_WITH_RECURSIVE_SCAN_FIELDS("customFlowReturnWithRecursiveScanFieldsTrueCollectReturnAnnotation", List.of()),
     FINISH_COLLECTING("finishCollectionAnnotation", List.of()),
     CUSTOM_FLOW_FINISH_COLLECTING("customFlowFinishCollectionAnnotation", List.of()),
+    RETURN_CUSTOM_OBJECT_COLLECTION("customReturnObjectCollection", List.of()),
+    CUSTOM_FLOW_RETURN_CUSTOM_OBJECT_COLLECTION("customFlowCustomReturnObjectCollection", List.of())
     ;
 
 

@@ -57,6 +57,12 @@ public class AfterJoinPointMockFactory {
     @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME, scanFields = true)
     public static RecursiveCollectObjectMock customFlowReturnWithRecursiveScanFieldsTrueCollectReturnAnnotation() { return null; }
 
+    @CollectReturn(collector = ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR)
+    public static void customReturnObjectCollection() {}
+
+    @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME, collector = ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR)
+    public static void customFlowCustomReturnObjectCollection() {}
+
     @FinishCollecting
     public static String finishCollectionAnnotation() { return ""; }
 

@@ -34,4 +34,10 @@ public @interface CollectReturn {
      * @see Collect
      */
     String flow() default "";
+
+    /**
+     * Defines a customized collector bean to fetch data from this parameter.
+     * Custom collector takes precedence over scanFields configuration.
+     */
+    String collector() default "";
 }

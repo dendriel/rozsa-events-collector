@@ -1,14 +1,16 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
-import mocks.CollectObjectMock;
-import mocks.CustomFlowCollectObjectMock;
-import mocks.RecursiveCollectObjectMock;
+import com.rozsa.events.collector.cached.ObjectCollectorManager;
+import mocks.*;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.List;
 
 import static mocks.AfterJoinPointMockFactory.*;
 import static mocks.AfterJoinPointMockScenarios.*;
@@ -18,7 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest(classes = { CollectReturnAspect.class })
+@SpringBootTest(classes = { CollectReturnAspect.class, ObjectCollectorsConfiguration.class, ObjectCollectorManager.class })
 public class CollectReturnAspectCustomFlowTest {
 
     @Autowired
@@ -106,5 +108,22 @@ public class CollectReturnAspectCustomFlowTest {
         verify(eventsCollectorManager, times(1)).collect(eq(AFTER_FIRST_CUSTOM_FLOW_NAME), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
         verify(eventsCollectorManager, times(1)).collect(eq(AFTER_FIRST_CUSTOM_FLOW_NAME), eq(RecursiveCollectObjectMock.COMPANION_FIELD_KEY), eq(targetValue04));
         verify(eventsCollectorManager, times(1)).collect(eq(FIELD_OVERRIDE_CUSTOM_FLOW), eq(CustomFlowCollectObjectMock.FIELD_OVERRIDE_NAME), eq(targetValue03));
+    }
+
+    @Test
+    void givenCustomObjectCollectorFlow_whenCollectReturnIsCalled_thenCustomObjectCollectorShouldBeUsedToCollectWithFlow() throws NoSuchMethodException, IllegalAccessException {
+        final String name = "Thomas A. Anderson";
+        final Integer age = 28;
+        final List<String> hobbies = List.of("Entering the Matrix", "Fighting Agent Smith", "Hacking");
+        ObjectForCustomCollection objectForCustomCollection = new ObjectForCustomCollection(name, age, hobbies);
+
+        final String expectedValue = ObjectCollectorsConfiguration.formatCollectedValue(objectForCustomCollection);
+
+        JoinPoint joinPoint = mockJoinPoint(CUSTOM_FLOW_RETURN_CUSTOM_OBJECT_COLLECTION);
+
+        collectReturnAspect.collect(joinPoint, objectForCustomCollection);
+
+        verify(eventsCollectorManager, times(1)).collect(
+                eq(AFTER_FIRST_CUSTOM_FLOW_NAME), eq(ObjectCollectorsConfiguration.CUSTOM_OBJECT_COLLECTOR_KEY), eq(expectedValue));
     }
 }

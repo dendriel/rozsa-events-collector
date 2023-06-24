@@ -1,14 +1,14 @@
 package com.rozsa.events.collector.aspects;
 
 import com.rozsa.events.collector.EventsCollectorManager;
-import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectReturn;
+import com.rozsa.events.collector.api.ObjectCollector;
 import com.rozsa.events.collector.aspects.utils.FieldCollector;
+import com.rozsa.events.collector.cached.ObjectCollectorManager;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
 import static com.rozsa.events.collector.aspects.utils.AnnotationUtils.getAnnotationFrom;
@@ -21,8 +21,11 @@ public class CollectReturnAspect {
 
     private final EventsCollectorManager eventsCollectorManager;
 
-    public CollectReturnAspect(EventsCollectorManager eventsCollectorManager) {
+    private final ObjectCollectorManager objectCollectorManager;
+
+    public CollectReturnAspect(EventsCollectorManager eventsCollectorManager, ObjectCollectorManager objectCollectorManager) {
         this.eventsCollectorManager = eventsCollectorManager;
+        this.objectCollectorManager = objectCollectorManager;
     }
 
     @Pointcut(value="@annotation(com.rozsa.events.collector.annotations.CollectReturn)")
@@ -32,6 +35,13 @@ public class CollectReturnAspect {
     public void collect(final JoinPoint joinPoint, final Object value) throws IllegalAccessException {
         final String flow = getFlow(joinPoint);
         CollectReturn collectReturn = getAnnotationFrom(CollectReturn.class, joinPoint);
+
+        if (!collectReturn.collector().isBlank()) {
+            String collectorName = collectReturn.collector();
+            ObjectCollector collector = objectCollectorManager.getBean(collectorName);
+            collector.collect(flow, value, eventsCollectorManager);
+            return;
+        }
 
         if (collectReturn.scanFields()) {
             FieldCollector.collectField(flow, value, eventsCollectorManager);

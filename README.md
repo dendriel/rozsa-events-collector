@@ -150,11 +150,11 @@ To avoid cluttering the business code with observability related functionalities
 
 ## TODO
 
-- Allow to setup multiple flows from annotations
-- Allow collector on CollectReturn
+- Create a sample web application
+- Create integrated test in sample app
 - Allow to setup multiple flows based on config
-- Capture on records
 - Create performance tests
 - Add reflection caching
-- Create a sample web application
+- Capture on records
 - Add CI to project.
+- Create final documentation
