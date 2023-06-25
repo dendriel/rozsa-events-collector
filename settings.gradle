@@ -13,4 +13,4 @@ plugins {
 }
 
 rootProject.name = 'rozsa-events-collector'
-include('lib')
+include('lib', 'demo-app')
