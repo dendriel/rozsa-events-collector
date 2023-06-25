@@ -2,27 +2,20 @@ package com.rozsa.events.collector;
 
 import com.rozsa.events.collector.api.EventsIdGenerator;
 import com.rozsa.events.collector.api.EventsSubmitter;
+import com.rozsa.events.collector.aspects.BeginCollectingAspect;
+import com.rozsa.events.collector.aspects.CollectAspect;
+import com.rozsa.events.collector.aspects.CollectReturnAspect;
+import com.rozsa.events.collector.aspects.FinishCollectingAspect;
 import com.rozsa.events.collector.cached.ObjectCollectorManager;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
 
-@Configuration
-@EnableAutoConfiguration
 public class EventsCollectorAutoConfiguration {
-
-    // TODO: validate if conditional is working.
-    @Bean
-    @ConditionalOnMissingBean(EventsIdGenerator.class)
-    public EventsIdGenerator provideEventsIdGenerator() {
-        return new UUIDEventsIdGenerator();
-    }
 
     @Bean
     public EventsCollectorManager provideEventsCollectorManager(
@@ -38,6 +31,13 @@ public class EventsCollectorAutoConfiguration {
     @Bean
     public ObjectCollectorManager provideObjectCollectorManager(final ApplicationContext applicationContext) {
         return new ObjectCollectorManager(applicationContext);
+    }
+
+    // TODO: validate if conditional is working.
+    @Bean
+    @ConditionalOnMissingBean(EventsIdGenerator.class)
+    public EventsIdGenerator provideEventsIdGenerator() {
+        return new UUIDEventsIdGenerator();
     }
 
     @Bean
@@ -57,5 +57,23 @@ public class EventsCollectorAutoConfiguration {
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(timeoutInMillis))
                 .build();
+    }
+
+    @Bean
+    public BeginCollectingAspect provideBeginCollectingAspect(EventsCollectorManager eventsCollectorManager) {
+        return new BeginCollectingAspect(eventsCollectorManager);
+    }
+
+    @Bean
+    public CollectAspect provideCollectAspect(EventsCollectorManager eventsCollectorManager, ObjectCollectorManager objectCollectorManager) {
+        return new CollectAspect(eventsCollectorManager, objectCollectorManager);
+    }
+    @Bean
+    public CollectReturnAspect provideCollectReturnAspect(EventsCollectorManager eventsCollectorManager, ObjectCollectorManager objectCollectorManager) {
+        return new CollectReturnAspect(eventsCollectorManager, objectCollectorManager);
+    }
+    @Bean
+    public FinishCollectingAspect provideFinishCollectingAspect(EventsCollectorManager eventsCollectorManager) {
+        return new FinishCollectingAspect(eventsCollectorManager);
     }
 }

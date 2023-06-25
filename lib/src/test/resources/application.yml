@@ -4,3 +4,7 @@ rozsa:
       endpoint: 'http://localhost:${wiremock.server.port}/collect'
     event:
       key: 'event_id'
+
+spring:
+  main:
+    web-application-type: none

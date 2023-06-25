@@ -55,7 +55,7 @@ public class HttpEventsSubmitter implements EventsSubmitter {
                 .thenApply(HttpResponse::statusCode);
 
         completableFuture.whenComplete((integer, throwable) -> {
-            log.trace("Events submission has completed with status {} - throwable {} - total events submitted {}", integer, throwable, events.size());
+            log.debug("Events submission has completed with status {} - throwable {} - total events submitted {}", integer, throwable, events.size());
         });
     }
 }

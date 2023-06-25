@@ -150,7 +150,6 @@ To avoid cluttering the business code with observability related functionalities
 
 ## TODO
 
-- Create a sample web application
 - Create integrated test in sample app
 - Allow to setup multiple flows based on config
 - Create performance tests

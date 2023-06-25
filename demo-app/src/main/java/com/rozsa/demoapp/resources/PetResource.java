@@ -2,8 +2,10 @@ package com.rozsa.demoapp.resources;
 
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.resources.dto.PetRequest;
+import com.rozsa.demoapp.resources.dto.PetResponse;
 import com.rozsa.demoapp.resources.mapper.PetMapper;
 import com.rozsa.demoapp.service.PetService;
+import com.rozsa.events.collector.annotations.BeginCollecting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,14 +36,17 @@ public class PetResource {
         return id;
     }
 
+    @BeginCollecting
     @GetMapping
-    public ResponseEntity<Pet> getPetByName(@RequestParam(required = false) String name) {
+    public ResponseEntity<PetResponse> getPetByName(@RequestParam(required = false) String name) {
         Optional<Pet> optPet = petService.getByName(name);
         if (optPet.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(optPet.get());
+        PetResponse response = petMapper.mapTo(optPet.get());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping( "/all")
