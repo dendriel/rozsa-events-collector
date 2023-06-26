@@ -1,7 +1,7 @@
 rozsa:
   events-collector:
     submit:
-      endpoint: 'http://localhost:${wiremock.server.port}/collect'
+      endpoint: 'http://localhost:${wiremock.server.port:8888}/collect'
     event:
       key: 'event_id'
 
