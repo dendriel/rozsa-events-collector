@@ -1,11 +1,11 @@
-package com.rozsa.demoapp.resources;
+package com.rozsa.demoapp.performance;
 
 import com.rozsa.demoapp.resources.dto.PetResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -13,15 +13,17 @@ import org.springframework.util.StopWatch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PetResourceTest {
+public class PerformanceTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+
+    @Disabled("This is a performance test to be executed manually (it is slow")
     @Test
     void perfTestsGetPetByName() {
 
-
+        // warmup
         for (int i = 0; i < 100; i++) {
             ResponseEntity<PetResponse> response = this.testRestTemplate
                     .getForEntity("/pet?name=Trinity", PetResponse.class);
@@ -60,6 +62,8 @@ public class PetResourceTest {
          * Tests: 10000 - Total: 4350 ms - avg: 0.435 ms (435 us)
          * Tests: 10000 - Total: 4198 ms - avg: 0.4198 ms (419 us)
          * Tests: 10000 - Total: 4521 ms - avg: 0.4521 ms (452.1 us)
+         * Tests: 10000 - Total: 4588 ms - avg: 0.4588 ms (458.8 us)
+         * Tests: 10000 - Total: 4454 ms - avg: 0.4454 ms (445.4 us)
          */
     }
 }
