@@ -1,3 +1,4 @@
+![Unit Tests](https://github.com/dendriel/rozsa-events-collector/actions/workflows/gradle.yml/badge.svg)
 # Rozsa Events Collector
 
 The aim of this project is to provide a **library** to be used in collecting data from the program execution flow. The
