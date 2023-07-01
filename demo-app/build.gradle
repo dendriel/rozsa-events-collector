@@ -18,7 +18,8 @@ dependencies {
     implementation project(':rozsa-events-collector-starter')
 //    implementation files('libs/lib-0.1.0-SNAPSHOT-plain.jar')
 
-    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok'
+
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
 }

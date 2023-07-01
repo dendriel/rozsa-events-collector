@@ -1,5 +1,9 @@
 package com.rozsa.demoapp.collection;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.matching.MatchResult;
+import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.resources.dto.PetResponse;
 import org.junit.jupiter.api.Disabled;
@@ -10,12 +14,16 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import testutils.EventMatcher;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.rozsa.demoapp.domain.PetType.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static testutils.AsyncTestUtils.verifyAsync;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
@@ -23,6 +31,8 @@ public class DefaultCollectionTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    private final ObjectMapper om = new ObjectMapper();
 
     private final List<Pet> petsDb = List.of(
             Pet.builder().id(1L).name("Trinity").age(6).color("Yellow").type(DOG).description("Trinity is a dog of color Yellow and is 6 years old")
@@ -32,6 +42,10 @@ public class DefaultCollectionTest {
             Pet.builder().id(3L).name("Merlin").age(1).color("Gray").type(CAT).description("Merlin is a cat of color Grey and is 1 year old")
                 .build()
     );
+
+//    private <T> Map<String, Object> objectToMap(T obj) {
+//        return om.convertValue(obj, Map.class);
+//    }
 
     @Test
     void givenAnnotatedCollectionFlow_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
@@ -51,17 +65,9 @@ public class DefaultCollectionTest {
         assertNotNull(response.getBody());
         assertPetEqualsResponse(targetPet, response.getBody());
 
-        //TODO: replace by verifyAsync
-        //TODO: assert submitted event data.
-        Thread.sleep(500);
-
-        verify(1, postRequestedFor(urlMatching("/collect")));
-
-//        verifyAsync(1, postRequestedFor(urlMatching("/collect"))
-//                        .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
-//                        .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
-//                1000
-//        );
+        verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                        .andMatching(EventMatcher.of(Map.of(DefaultFlowKeys.PET_NAME, targetName))),
+                1000);
     }
 
     private void assertPetEqualsResponse(Pet pet, PetResponse petResponse) {

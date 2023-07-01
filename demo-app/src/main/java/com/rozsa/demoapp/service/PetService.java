@@ -1,9 +1,8 @@
 package com.rozsa.demoapp.service;
 
+import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.repository.PetRepository;
-import com.rozsa.events.collector.EventsCollectorManager;
-import com.rozsa.events.collector.annotations.BeginCollecting;
 import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectParameter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class PetService {
     }
 
     @Collect
-    public Optional<Pet> getByName(@CollectParameter("petName") final String name) {
+    public Optional<Pet> getByName(@CollectParameter(DefaultFlowKeys.PET_NAME) final String name) {
         Optional<Pet> pet = petRepository.findFirstByNameEquals(name);
 
         return pet;
