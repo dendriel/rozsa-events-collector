@@ -2,7 +2,10 @@ package com.rozsa.demoapp.service;
 
 import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
+import com.rozsa.demoapp.domain.PetType;
 import com.rozsa.demoapp.repository.PetRepository;
+import com.rozsa.demoapp.service.model.PetFilter;
+import com.rozsa.events.collector.EventsCollectorManager;
 import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectParameter;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ public class PetService {
 
     private final PetRepository petRepository;
 
+    private final EventsCollectorManager eventsCollectorManager;
+
     public Long create(final Pet pet) {
         petRepository.save(pet);
 
@@ -32,7 +37,11 @@ public class PetService {
         return pet;
     }
 
-    public List<String> getDescriptions(final String name, final String color) {
+    @Collect
+    public List<String> getDescriptions(
+            @CollectParameter("nameFilter") final String name,
+            @CollectParameter("colorFilter") final String color
+    ) {
         Iterable<Pet> pets;
 
         // do not select in production software without limiting results.
@@ -52,5 +61,18 @@ public class PetService {
         );
 
         return descriptions;
+    }
+
+    @Collect
+    public Optional<Pet> findPetByFilters(@CollectParameter(scanFields = true) final PetFilter filter) {
+        Optional<Pet> pet = petRepository
+                .findPetByNameEqualsAndColorEqualsAndAgeEqualsAndTypeEquals(
+                        filter.getName(),
+                        filter.getColor(),
+                        filter.getAge(),
+                        filter.getType()
+                );
+
+        return pet;
     }
 }

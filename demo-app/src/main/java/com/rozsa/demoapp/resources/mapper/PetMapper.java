@@ -3,6 +3,7 @@ package com.rozsa.demoapp.resources.mapper;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.resources.dto.PetRequest;
 import com.rozsa.demoapp.resources.dto.PetResponse;
+import com.rozsa.demoapp.service.model.PetFilter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +29,15 @@ public class PetMapper {
                 .color(pet.getColor())
                 .type(pet.getType())
                 .description(pet.getDescription())
+                .build();
+    }
+
+    public PetFilter mapToFilter(PetRequest request) {
+        return PetFilter.builder()
+                .name(request.getName())
+                .age(request.getAge())
+                .color(request.getColor())
+                .type(request.getType())
                 .build();
     }
 }

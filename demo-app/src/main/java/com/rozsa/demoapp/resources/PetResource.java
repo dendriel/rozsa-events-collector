@@ -1,11 +1,15 @@
 package com.rozsa.demoapp.resources;
 
+import com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
+import com.rozsa.demoapp.domain.PetType;
 import com.rozsa.demoapp.resources.dto.PetRequest;
 import com.rozsa.demoapp.resources.dto.PetResponse;
 import com.rozsa.demoapp.resources.mapper.PetMapper;
 import com.rozsa.demoapp.service.PetService;
+import com.rozsa.demoapp.service.model.PetFilter;
 import com.rozsa.events.collector.annotations.BeginCollecting;
+import com.rozsa.events.collector.annotations.CollectReturn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,7 +58,29 @@ public class PetResource {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String color
     ) {
-        List<String> descriptions = petService.getDescriptions(name, color);
-        return descriptions;
+        return petService.getDescriptions(name, color);
+    }
+
+    @BeginCollecting(flow = PetFilterFlowKeys.FLOW_NAME)
+    @CollectReturn(flow = PetFilterFlowKeys.FLOW_NAME, collector = PetFilterFlowKeys.PET_RESPONSE_COLLECTOR)
+    @GetMapping("/find")
+    public ResponseEntity<PetResponse> findPetByFilter(
+            @RequestParam String name, @RequestParam String color, @RequestParam Integer age, @RequestParam PetType type
+    ) {
+        PetFilter filter = PetFilter.builder()
+                .name(name)
+                .color(color)
+                .age(age)
+                .type(type)
+                .build();
+
+        Optional<Pet> optPet = petService.findPetByFilters(filter);
+
+        if (optPet.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        PetResponse response = petMapper.mapTo(optPet.get());
+        return ResponseEntity.ok(response);
     }
 }
