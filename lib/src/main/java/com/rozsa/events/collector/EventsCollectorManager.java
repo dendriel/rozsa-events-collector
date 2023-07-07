@@ -14,7 +14,7 @@ import java.util.Set;
 public class EventsCollectorManager {
     public static final Logger log = LoggerFactory.getLogger(EventsCollectorManager.class);
     private static final ThreadLocal<CollectionContextHandler> collections = ThreadLocal.withInitial(CollectionContextHandler::new);
-    private static final String defaultFlow = "default";
+    public static final String defaultFlow = "default";
 
     private final String idFieldKey;
     private final EventsIdGenerator eventsIdGenerator;
@@ -79,7 +79,7 @@ public class EventsCollectorManager {
     public void submit(final String flow) throws IOException {
         log.debug("[flow:{}] Submitting the event to remote server.", flow);
 
-        eventsSubmitter.submit(getFlow(flow).getCollection());
+        eventsSubmitter.submit(flow, getFlow(flow).getCollection());
 
         clear(flow);
     }

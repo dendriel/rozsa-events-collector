@@ -2,17 +2,17 @@ package com.rozsa.demoapp.domain;
 
 import com.rozsa.events.collector.annotations.CollectField;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import static com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys.FIND_FAV_PET_FLOW;
+import static com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys.PET_DESCRIPTION;
 import static com.rozsa.demoapp.configuration.collector.OwnerFavouritePetFlowKeys.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class Pet {
     @CollectField(flow = OWNER_FAV_PET_FLOW, key = OWNER_FAV_PET_ID)
@@ -31,6 +31,7 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetType type;
 
+    @CollectField(flow = FIND_FAV_PET_FLOW, key = PET_DESCRIPTION)
     private String description;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

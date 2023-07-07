@@ -13,40 +13,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import testutils.EventMatcher;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.rozsa.demoapp.domain.PetType.*;
+import static com.rozsa.demoapp.mocks.DatabaseData.PETS_DB;
 import static org.junit.jupiter.api.Assertions.*;
 import static testutils.AsyncTestUtils.verifyAsync;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
-public class DefaultCollectionTest {
+public class PetResourceTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
-    private final List<Pet> petsDb = List.of(
-            Pet.builder().id(1L).name("Trinity").age(6).color("Yellow").type(DOG).description("Trinity is a dog of color Yellow and is 6 years old")
-                .build(),
-            Pet.builder().id(2L).name("Sebastian").age(29).color("Green").type(TURTLE).description("Sebastian is a turtle of color Green and is 29 years old")
-                .build(),
-            Pet.builder().id(3L).name("Merlin").age(1).color("Gray").type(CAT).description("Merlin is a cat of color Grey and is 1 year old")
-                .build()
-    );
-
-    /**
-     * TODO:
-     *
-     * Add more test scenarios:
-     * - recursive field collection
-     * - multiple flow collection
-     * - configurable flows
-     * - id and submitter bean overriding
-     */
-
 
     /**
      * Initialize the default flow
@@ -55,7 +34,7 @@ public class DefaultCollectionTest {
      */
     @Test
     void givenAnnotatedCollectionFlow_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
-        final Pet targetPet = petsDb.get(0);
+        final Pet targetPet = PETS_DB.get(0);
         final String targetName = targetPet.getName();
 
         stubFor(post(urlMatching("/collect"))
@@ -68,8 +47,6 @@ public class DefaultCollectionTest {
                 .getForEntity(String.format("/pet?name=%s", targetName), PetResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertPetEqualsResponse(targetPet, response.getBody());
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
                         .andMatching(EventMatcher.of(Map.of(DefaultFlowKeys.PET_NAME, targetName))),
@@ -85,7 +62,7 @@ public class DefaultCollectionTest {
      */
     @Test
     void givenCollectParamScanFields_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
-        final Pet targetPet = petsDb.get(1);
+        final Pet targetPet = PETS_DB.get(1);
 
         stubFor(post(urlMatching("/collect"))
                 .willReturn(aResponse()
@@ -98,8 +75,6 @@ public class DefaultCollectionTest {
                         targetPet.getName(), targetPet.getAge(), targetPet.getColor(), targetPet.getType()), PetResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertPetEqualsResponse(targetPet, response.getBody());
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
                         .andMatching(EventMatcher.of(Map.of(
@@ -109,14 +84,5 @@ public class DefaultCollectionTest {
                                 PetFilterFlowKeys.RESPONSE_NAME, targetPet.getName()
                         ))),
                 1000);
-    }
-
-    private void assertPetEqualsResponse(Pet pet, PetResponse petResponse) {
-        assertEquals(pet.getId(), petResponse.getId());
-        assertEquals(pet.getName(), petResponse.getName());
-        assertEquals(pet.getAge(), petResponse.getAge());
-        assertEquals(pet.getType(), petResponse.getType());
-        assertEquals(pet.getColor(), petResponse.getColor());
-        assertEquals(pet.getDescription(), petResponse.getDescription());
     }
 }

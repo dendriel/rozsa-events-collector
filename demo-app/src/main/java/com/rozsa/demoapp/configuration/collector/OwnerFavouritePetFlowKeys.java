@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OwnerFavouritePetFlowKeys {
-    public static final String OWNER_FAV_PET_FLOW = "favourite_pet";
+    public static final String OWNER_FAV_PET_FLOW = "owner_favourite_pet";
 
     public static final String OWNER_ID = "owner_id";
 

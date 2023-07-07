@@ -1,5 +1,5 @@
 INSERT INTO OWNER (id, name, age, gender) VALUES
-      (1, 'José', 12, 'MALE'),
+      (1, 'Joe', 12, 'MALE'),
       (2, 'Ruan', 40, 'MALE'),
       (3, 'Mariana', 30, 'FEMALE')
 ;

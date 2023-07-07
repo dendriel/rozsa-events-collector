@@ -160,6 +160,7 @@ public class EventsCollectorManagerIntegrationTest {
         eventsCollectorManager.submit();
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(EventsCollectorManager.defaultFlow))
                 .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
                 .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
                 1000
@@ -192,6 +193,7 @@ public class EventsCollectorManagerIntegrationTest {
         eventsCollectorManager.submit(flow02Name);
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(flow02Name))
                         .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
                         .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
                 1000
@@ -222,6 +224,7 @@ public class EventsCollectorManagerIntegrationTest {
         eventsCollectorManager.submit();
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
+                        .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(EventsCollectorManager.defaultFlow))
                         .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
                         .withRequestBody(matchingJsonPath("$[0].event_id", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
                 1000

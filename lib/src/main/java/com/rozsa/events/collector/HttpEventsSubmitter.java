@@ -20,8 +20,9 @@ import java.util.concurrent.CompletableFuture;
 public class HttpEventsSubmitter implements EventsSubmitter {
     public static final Logger log = LoggerFactory.getLogger(HttpEventsSubmitter.class);
 
-    private final String contentTypeHeader = "Content-Type";
-    private final String jsonContentType = "application/json";
+    private static final String contentTypeHeader = "Content-Type";
+    private static final String jsonContentType = "application/json";
+    public static final String flowNameHeader = "x-flow";
 
     private final HttpClient httpClient;
 
@@ -39,7 +40,7 @@ public class HttpEventsSubmitter implements EventsSubmitter {
     // TODO: configure thread pool
     // TODO: coalescence
     @Override
-    public void submit(final Map<String, Object> eventData) throws IOException {
+    public void submit(final String flow, final Map<String, Object> eventData) throws IOException {
         if (eventData.size() == 0) {
             log.debug("Can't submit an event without data.");
             return;
@@ -52,6 +53,7 @@ public class HttpEventsSubmitter implements EventsSubmitter {
 
         HttpRequest request = HttpRequest.newBuilder(URI.create(endpoint))
                 .header(contentTypeHeader,jsonContentType)
+                .header(flowNameHeader, flow)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 

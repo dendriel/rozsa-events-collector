@@ -4,8 +4,10 @@ import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.repository.PetRepository;
 import com.rozsa.demoapp.service.model.PetFilter;
+import com.rozsa.events.collector.annotations.BeginCollecting;
 import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectParameter;
+import com.rozsa.events.collector.annotations.CollectReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,6 +15,9 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys.FIND_FAV_PET_FLOW;
+import static com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys.OWNER_ID;
 
 @RequiredArgsConstructor
 @Service
@@ -72,7 +77,12 @@ public class PetService {
         return pet;
     }
 
-    public Optional<Pet> findFavouritePetByOwnerId(final Long ownerId) {
+    @BeginCollecting(flow = FIND_FAV_PET_FLOW)
+    @Collect
+    @CollectReturn(flow = FIND_FAV_PET_FLOW, scanFields = true)
+    public Optional<Pet> findFavouritePetByOwnerId(
+            @CollectParameter(flow = FIND_FAV_PET_FLOW, key = OWNER_ID) final Long ownerId
+    ) {
         return petRepository.findFirstByOwnerIdAndIsFavourite(ownerId, true);
     }
 }
