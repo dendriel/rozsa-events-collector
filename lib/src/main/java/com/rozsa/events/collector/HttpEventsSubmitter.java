@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Simple HTTP events submitter.
+ */
 public class HttpEventsSubmitter implements EventsSubmitter {
     public static final Logger log = LoggerFactory.getLogger(HttpEventsSubmitter.class);
 
@@ -41,6 +44,8 @@ public class HttpEventsSubmitter implements EventsSubmitter {
             log.debug("Can't submit an event without data.");
             return;
         }
+
+        log.debug("Submitting event: {}", eventData);
 
         List<Map<String, Object>> events = List.of(eventData);
         final String body = mapper.writeValueAsString(events);

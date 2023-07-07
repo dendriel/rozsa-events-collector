@@ -4,7 +4,6 @@ import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.repository.PetRepository;
 import com.rozsa.demoapp.service.model.PetFilter;
-import com.rozsa.events.collector.EventsCollectorManager;
 import com.rozsa.events.collector.annotations.Collect;
 import com.rozsa.events.collector.annotations.CollectParameter;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +70,9 @@ public class PetService {
                 );
 
         return pet;
+    }
+
+    public Optional<Pet> findFavouritePetByOwnerId(final Long ownerId) {
+        return petRepository.findFirstByOwnerIdAndIsFavourite(ownerId, true);
     }
 }

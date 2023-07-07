@@ -12,12 +12,12 @@ public class PetFilter {
 
     private String name;
 
-    @CollectField(flow = PetFilterFlowKeys.FLOW_NAME, key = PetFilterFlowKeys.FILTERS_AGE)
+    @CollectField(flow = PetFilterFlowKeys.PET_FLOW, key = PetFilterFlowKeys.FILTERS_AGE)
     private Integer age;
 
-    @CollectField(flow = PetFilterFlowKeys.FLOW_NAME, key = PetFilterFlowKeys.FILTERS_COLOR)
+    @CollectField(flow = PetFilterFlowKeys.PET_FLOW, key = PetFilterFlowKeys.FILTERS_COLOR)
     private String color;
 
-    @CollectField(flow = PetFilterFlowKeys.FLOW_NAME, key = PetFilterFlowKeys.FILTERS_TYPE)
+    @CollectField(flow = PetFilterFlowKeys.PET_FLOW, key = PetFilterFlowKeys.FILTERS_TYPE)
     private PetType type;
 }

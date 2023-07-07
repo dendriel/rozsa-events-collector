@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static com.rozsa.events.collector.aspects.utils.AnnotationUtils.getAnnotationFrom;
 import static com.rozsa.events.collector.aspects.utils.JoinPointUtils.getMethodName;
 
@@ -32,7 +34,15 @@ public class CollectReturnAspect {
     public void collectReturnAnnotation() {}
 
     @AfterReturning(value="collectReturnAnnotation()", returning="value")
-    public void collect(final JoinPoint joinPoint, final Object value) throws IllegalAccessException {
+    public void collect(final JoinPoint joinPoint, Object value) throws IllegalAccessException {
+        if (value instanceof Optional<?> optTarget) {
+            if (optTarget.isEmpty()) {
+                return;
+            }
+
+            value = optTarget.get();
+        }
+
         final String flow = getFlow(joinPoint);
         CollectReturn collectReturn = getAnnotationFrom(CollectReturn.class, joinPoint);
 

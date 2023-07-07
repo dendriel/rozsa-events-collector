@@ -1,6 +1,5 @@
 package com.rozsa.demoapp.resources;
 
-import com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.domain.PetType;
 import com.rozsa.demoapp.resources.dto.PetRequest;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class PetResource {
         return id;
     }
 
-    @BeginCollecting
+    @BeginCollecting // default flow doesn't require a flow name.
     @GetMapping
     public ResponseEntity<PetResponse> getPetByName(@RequestParam(required = false) String name) {
         Optional<Pet> optPet = petService.getByName(name);
@@ -61,8 +62,8 @@ public class PetResource {
         return petService.getDescriptions(name, color);
     }
 
-    @BeginCollecting(flow = PetFilterFlowKeys.FLOW_NAME)
-    @CollectReturn(flow = PetFilterFlowKeys.FLOW_NAME, collector = PetFilterFlowKeys.PET_RESPONSE_COLLECTOR)
+    @BeginCollecting(flow = PET_FLOW)
+    @CollectReturn(flow = PET_FLOW, collector = PET_RESPONSE_COLLECTOR)
     @GetMapping("/find")
     public ResponseEntity<PetResponse> findPetByFilter(
             @RequestParam String name, @RequestParam String color, @RequestParam Integer age, @RequestParam PetType type

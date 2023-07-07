@@ -2,8 +2,6 @@ package com.rozsa.demoapp.repository;
 
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.domain.PetType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +18,6 @@ public interface PetRepository extends CrudRepository<Pet, Long> {
     Optional<Pet> findFirstByNameEquals(String name);
 
     Optional<Pet> findPetByNameEqualsAndColorEqualsAndAgeEqualsAndTypeEquals(String name, String color, Integer age, PetType type);
+
+    Optional<Pet> findFirstByOwnerIdAndIsFavourite(Long id, Boolean isFavourite);
 }

@@ -20,9 +20,12 @@ algorithm (although if desired is possible to collect data by explicitly calling
 
 ## TODO
 
+- Add tests for Optional type unwrapping 
 - Create integrated test in sample app
 - Allow to setup multiple flows based on config
 - Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
+- Allow simple operations over sets (like counting elements)
+- Allow to declare default flow name at class level
 - Add reflection caching
 - Capture on records
 - Create final documentation

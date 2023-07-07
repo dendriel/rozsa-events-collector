@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PetFilterFlowKeys {
-    public static final String FLOW_NAME = "pet_filtering";
+    public static final String PET_FLOW = "pet_filtering";
 
     public static final String PET_RESPONSE_COLLECTOR = "pet_response_collector";
 

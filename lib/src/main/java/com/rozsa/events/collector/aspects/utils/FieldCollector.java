@@ -6,6 +6,7 @@ import com.rozsa.events.collector.annotations.CollectField;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FieldCollector {
 
