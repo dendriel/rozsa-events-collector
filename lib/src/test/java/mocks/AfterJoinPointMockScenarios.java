@@ -7,6 +7,7 @@ public enum AfterJoinPointMockScenarios {
     RETURN_WITH_KEY("stringReturnWithKeyCollectReturnAnnotation", List.of()),
     RETURN_WITH_EXPLICIT_KEY("stringReturnWithExplicitKeyCollectReturnAnnotation", List.of()),
     RETURN_WITH_SCAN_FIELDS("returnWithScanFieldsTrueCollectReturnAnnotation", List.of()),
+    OPTIONAL_RETURN_WITH_SCAN_FIELDS("optionalReturnWithScanFieldsTrueCollectReturnAnnotation", List.of()),
     RETURN_WITH_RECURSIVE_SCAN_FIELDS("returnWithRecursiveScanFieldsTrueCollectReturnAnnotation", List.of()),
     CUSTOM_FLOW_SIMPLE_RETURN("customFlowStringReturnCollectReturnAnnotation", List.of()),
     CUSTOM_FLOW_RETURN_WITH_SCAN_FIELDS("customFlowReturnWithScanFieldsTrueCollectReturnAnnotation", List.of()),

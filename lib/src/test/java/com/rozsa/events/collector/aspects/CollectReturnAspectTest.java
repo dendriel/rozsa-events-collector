@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.Optional;
 
 import static mocks.AfterJoinPointMockFactory.*;
 import static mocks.AfterJoinPointMockScenarios.RETURN_CUSTOM_OBJECT_COLLECTION;
@@ -119,5 +120,29 @@ public class CollectReturnAspectTest {
     @Test
     void coverPointCutEmptyMethod() {
         collectReturnAspect.collectReturnAnnotation();
+    }
+
+    @Test
+    void givenMethodForCollectionOptionalReturn_whenCollectReturnIsCalled_thenMarkedFieldsShouldBeCollected() throws NoSuchMethodException, IllegalAccessException {
+        final Boolean targetValue01 = false;
+        final Double targetValue02 = 66.99;
+        CollectObjectMock captureObjectMock = new CollectObjectMock(targetValue01, targetValue02);
+
+        JoinPoint joinPoint = mockJoinPoint(AfterJoinPointMockScenarios.OPTIONAL_RETURN_WITH_SCAN_FIELDS);
+
+        collectReturnAspect.collect(joinPoint, Optional.of(captureObjectMock));
+
+        verify(eventsCollectorManager, times(2)).collect(any(), any(), any());
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FINAL_FIELD_DEFAULT_KEY), eq(targetValue01));
+        verify(eventsCollectorManager, times(1)).collect(eq(StringUtils.EMPTY), eq(CollectObjectMock.FIELD_CUSTOM_KEY), eq(targetValue02));
+    }
+
+    @Test
+    void givenMethodForCollectionEmptyOptionalReturn_whenCollectReturnIsCalled_thenNothingShouldBeCollected() throws NoSuchMethodException, IllegalAccessException {
+        JoinPoint joinPoint = mockJoinPoint(AfterJoinPointMockScenarios.OPTIONAL_RETURN_WITH_SCAN_FIELDS);
+
+        collectReturnAspect.collect(joinPoint, Optional.empty());
+
+        verify(eventsCollectorManager, times(0)).collect(any(), any(), any());
     }
 }

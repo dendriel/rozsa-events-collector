@@ -7,6 +7,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,6 +48,9 @@ public class AfterJoinPointMockFactory {
 
     @CollectReturn(scanFields = true)
     public static CollectObjectMock returnWithScanFieldsTrueCollectReturnAnnotation() { return null; }
+
+    @CollectReturn(scanFields = true)
+    public static Optional<CollectObjectMock> optionalReturnWithScanFieldsTrueCollectReturnAnnotation() { return null; }
 
     @CollectReturn(flow = AFTER_FIRST_CUSTOM_FLOW_NAME, scanFields = true)
     public static CollectObjectMock customFlowReturnWithScanFieldsTrueCollectReturnAnnotation() { return null; }
