@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PetRepository extends CrudRepository<Pet, Integer> {
+public interface PetRepository extends CrudRepository<Pet, Long> {
 
     List<Pet> findPetsByNameContains(String name);
 

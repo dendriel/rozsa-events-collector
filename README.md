@@ -22,6 +22,7 @@ algorithm (although if desired is possible to collect data by explicitly calling
 
 - Create integrated test in sample app
 - Allow to setup multiple flows based on config
+- Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
 - Add reflection caching
 - Capture on records
 - Create final documentation

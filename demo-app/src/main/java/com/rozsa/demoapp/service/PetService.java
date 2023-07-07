@@ -2,7 +2,6 @@ package com.rozsa.demoapp.service;
 
 import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
-import com.rozsa.demoapp.domain.PetType;
 import com.rozsa.demoapp.repository.PetRepository;
 import com.rozsa.demoapp.service.model.PetFilter;
 import com.rozsa.events.collector.EventsCollectorManager;
@@ -21,8 +20,6 @@ import java.util.Optional;
 public class PetService {
 
     private final PetRepository petRepository;
-
-    private final EventsCollectorManager eventsCollectorManager;
 
     public Long create(final Pet pet) {
         petRepository.save(pet);

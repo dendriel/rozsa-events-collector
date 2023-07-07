@@ -1,14 +1,9 @@
 package com.rozsa.demoapp.collection;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
-import com.rozsa.demoapp.resources.dto.PetRequest;
 import com.rozsa.demoapp.resources.dto.PetResponse;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import testutils.EventMatcher;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 

@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class Pet {
+public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,14 +22,10 @@ public class Pet {
 
     private Integer age;
 
-    private String color;
-
     @Enumerated(EnumType.STRING)
-    private PetType type;
+    private Gender gender;
 
-    private String description;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name="owner_id")
-    private Owner owner;
+    @OneToMany(mappedBy = "owner")
+    private List<Pet> pets;
 }
+

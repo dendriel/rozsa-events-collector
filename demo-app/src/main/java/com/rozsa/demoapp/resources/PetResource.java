@@ -21,8 +21,8 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestController
 @RequestMapping("/pet")
+@RestController
 public class PetResource {
 
     private final PetService petService;
