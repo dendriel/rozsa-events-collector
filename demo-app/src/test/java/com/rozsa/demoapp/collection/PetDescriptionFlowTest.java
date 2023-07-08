@@ -1,9 +1,5 @@
 package com.rozsa.demoapp.collection;
 
-import com.rozsa.demoapp.configuration.collector.PetDescriptionFlowKeys;
-import com.rozsa.demoapp.domain.Owner;
-import com.rozsa.demoapp.domain.Pet;
-import com.rozsa.demoapp.mocks.DatabaseData;
 import com.rozsa.events.collector.HttpEventsSubmitter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +15,6 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.rozsa.demoapp.configuration.collector.PetDescriptionFlowKeys.*;
-import static com.rozsa.demoapp.mocks.DatabaseData.PETS_DB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static testutils.AsyncTestUtils.verifyAsync;
 

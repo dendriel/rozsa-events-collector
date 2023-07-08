@@ -3,6 +3,7 @@ package com.rozsa.demoapp.collection;
 import com.rozsa.demoapp.configuration.collector.DefaultFlowKeys;
 import com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
+import com.rozsa.demoapp.repository.PetRepository;
 import com.rozsa.demoapp.resources.dto.PetResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import testutils.EventMatcher;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.rozsa.demoapp.mocks.DatabaseData.PETS_DB;
 import static org.junit.jupiter.api.Assertions.*;
 import static testutils.AsyncTestUtils.verifyAsync;
 
@@ -27,6 +27,9 @@ public class PetResourceTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private PetRepository petRepository;
+
     /**
      * Initialize the default flow
      * Collects a parameter value using default flow
@@ -34,7 +37,7 @@ public class PetResourceTest {
      */
     @Test
     void givenAnnotatedCollectionFlow_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
-        final Pet targetPet = PETS_DB.get(0);
+        final Pet targetPet = petRepository.findById(1L).orElseThrow();
         final String targetName = targetPet.getName();
 
         stubFor(post(urlMatching("/collect"))
@@ -62,7 +65,7 @@ public class PetResourceTest {
      */
     @Test
     void givenCollectParamScanFields_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
-        final Pet targetPet = PETS_DB.get(1);
+        final Pet targetPet = petRepository.findById(2L).orElseThrow();
 
         stubFor(post(urlMatching("/collect"))
                 .willReturn(aResponse()

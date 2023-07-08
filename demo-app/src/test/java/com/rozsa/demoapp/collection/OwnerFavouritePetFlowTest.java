@@ -3,7 +3,8 @@ package com.rozsa.demoapp.collection;
 import com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys;
 import com.rozsa.demoapp.domain.Owner;
 import com.rozsa.demoapp.domain.Pet;
-import com.rozsa.demoapp.mocks.DatabaseData;
+import com.rozsa.demoapp.repository.OwnerRepository;
+import com.rozsa.demoapp.repository.PetRepository;
 import com.rozsa.demoapp.resources.dto.OwnerResponse;
 import com.rozsa.events.collector.HttpEventsSubmitter;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.rozsa.demoapp.configuration.collector.OwnerFavouritePetFlowKeys.*;
-import static com.rozsa.demoapp.mocks.DatabaseData.PETS_DB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static testutils.AsyncTestUtils.verifyAsync;
 
@@ -32,7 +32,10 @@ public class OwnerFavouritePetFlowTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private DatabaseData db;
+    private OwnerRepository ownerRepository;
+
+    @Autowired
+    private PetRepository petRepository;
 
     /**
      * Initializes a custom flow
@@ -44,8 +47,8 @@ public class OwnerFavouritePetFlowTest {
      */
     @Test
     void givenCollectReturnRecursiveScanFields_whenFlowCalled_thenExpectedDataShouldBeCollected() throws InterruptedException {
-        final Owner targetOwner = db.getOwnerById(1L);
-        final Pet targetPet = PETS_DB.get(3);
+        final Owner targetOwner = ownerRepository.findById(1L).orElseThrow();
+        final Pet targetPet = petRepository.findById(4L).orElseThrow();
 
         stubFor(post(urlMatching("/collect"))
                 .willReturn(aResponse()
