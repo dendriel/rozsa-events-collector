@@ -61,7 +61,7 @@ public class OwnerFavouritePetFlowTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
-                        .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(OWNER_FAV_PET_FLOW))
+                        .withHeader("x-flow", equalTo(OWNER_FAV_PET_FLOW))
                         .andMatching(EventMatcher.of(Map.of(
                                 OWNER_ID, targetOwner.getId().intValue(),
                                 OWNER_NAME, targetOwner.getName(),
@@ -73,7 +73,7 @@ public class OwnerFavouritePetFlowTest {
                 1000);
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect"))
-                        .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(FindFavouritePetFlowKeys.FIND_FAV_PET_FLOW))
+                        .withHeader("x-flow", equalTo(FindFavouritePetFlowKeys.FIND_FAV_PET_FLOW))
                         .andMatching(EventMatcher.of(Map.of(
                                 FindFavouritePetFlowKeys.OWNER_ID, targetOwner.getId().intValue(),
                                 FindFavouritePetFlowKeys.PET_DESCRIPTION, targetPet.getDescription()

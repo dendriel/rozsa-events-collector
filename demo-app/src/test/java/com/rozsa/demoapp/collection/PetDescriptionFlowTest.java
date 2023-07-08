@@ -47,7 +47,7 @@ public class PetDescriptionFlowTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         verifyAsync(1, postRequestedFor(urlMatching("/collect/pet/description"))
-                        .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(PET_DESC_FLOW))
+                        .withHeader("x-flow", equalTo(PET_DESC_FLOW))
                         .andMatching(EventMatcher.of(Map.of(
                                 PET_NAME, targetName,
                                 PET_COLOR, targetColor

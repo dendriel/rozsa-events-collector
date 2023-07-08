@@ -1,7 +1,9 @@
 package com.rozsa.events.collector;
 
-import java.util.Map;
+import org.springframework.util.StringUtils;
+
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Wraps custom flows configurations from plus default flow configuration.
@@ -15,14 +17,33 @@ public class EventsCollectorFlowConfiguration {
     public EventsCollectorFlowConfiguration(
             final String defaultSubmitEndpoint,
             final String defaultEventKey,
+            final String eventHeader,
             final FlowsConfigurations flowsConfigurations
     ) {
         this.flowsConfigurations = Optional.ofNullable(flowsConfigurations)
                 .orElse(FlowsConfigurations.create());
-        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventKey);
+        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventKey, eventHeader);
     }
 
-    public FlowsConfigurations.FlowConfiguration getByName(final String flowName) {
-        return flowsConfigurations.getOrDefault(flowName, defaultFlow);
+    public String getEventKey(final String flowName) {
+        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventKey);
+    }
+
+    public String getSubmitEndpoint(final String flowName) {
+        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::submitEndpoint);
+    }
+
+    public String getEventHeader(final String flowName) {
+        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventHeader);
+    }
+
+    private String getOrDefault(final String flowName,
+                               Function<FlowsConfigurations.FlowConfiguration, String> getter
+    ) {
+        FlowsConfigurations.FlowConfiguration flow = flowsConfigurations.getOrDefault(flowName, defaultFlow);
+        if (!StringUtils.hasText(getter.apply(flow))) {
+            return getter.apply(defaultFlow);
+        }
+        return getter.apply(flow);
     }
 }

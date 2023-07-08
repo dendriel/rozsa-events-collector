@@ -39,11 +39,11 @@ public class EventsCollectorManager {
 
         getCollectionContextHandler().initialize(flow);
 
-        FlowsConfigurations.FlowConfiguration config = configuration.getByName(flow);
+        String eventKey = configuration.getEventKey(flow);
         Object id = eventsIdGenerator.generate();
-        collect(flow, config.eventKey(), id);
+        collect(flow, eventKey, id);
 
-        log.debug("[flow:{}] Collection context has initialized. Current event ID is '{}={}'", flow, config.eventKey(), id);
+        log.debug("[flow:{}] Collection context has initialized. Current event ID is '{}={}'", flow, eventKey, id);
     }
 
     /**

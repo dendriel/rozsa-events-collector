@@ -54,7 +54,7 @@ public class EventsCollectorAutoConfiguration {
     @Bean("eventsSubmitterHttpClient")
     @ConditionalOnMissingBean(value = HttpClient.class, name = "eventsSubmitterHttpClient")
     public HttpClient provideHttpClient(
-            @Value("${rozsa.events-collector.submit.timeout:3000}") final Integer timeoutInMillis
+            @Value("${rozsa.events-collector.submit-timeout:3000}") final Integer timeoutInMillis
     ) {
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(timeoutInMillis))
@@ -63,11 +63,12 @@ public class EventsCollectorAutoConfiguration {
 
     @Bean
     public EventsCollectorFlowConfiguration provideEventsCollectorFlowConfiguration(
-            @Value("${rozsa.events-collector.submit.endpoint:http://localhost:8080/collect}") String defaultSubmitEndpoint,
-            @Value("${rozsa.events-collector.event.key:id}") final String defaultIdKey,
+            @Value("${rozsa.events-collector.submit-endpoint:http://localhost:8080/collect}") final String submitEndpoint,
+            @Value("${rozsa.events-collector.event-key:id}") final String eventKey,
+            @Value("${rozsa.events-collector.event-header:x-flow}") final String eventHeader,
             final FlowsConfigurations flowsConfigurations
     ) {
-        return new EventsCollectorFlowConfiguration(defaultSubmitEndpoint, defaultIdKey, flowsConfigurations);
+        return new EventsCollectorFlowConfiguration(submitEndpoint, eventKey, eventHeader, flowsConfigurations);
     }
 
     @Bean

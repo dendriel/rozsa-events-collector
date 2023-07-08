@@ -24,5 +24,5 @@ public class FlowsConfigurations {
         return flows.getOrDefault(name, defaultConfig);
     }
 
-    public record FlowConfiguration(String submitEndpoint, String eventKey) {}
+    public record FlowConfiguration(String submitEndpoint, String eventKey, String eventHeader) {}
 }

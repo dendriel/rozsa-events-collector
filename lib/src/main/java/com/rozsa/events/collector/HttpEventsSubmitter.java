@@ -22,7 +22,6 @@ public class HttpEventsSubmitter implements EventsSubmitter {
 
     private static final String contentTypeHeader = "Content-Type";
     private static final String jsonContentType = "application/json";
-    public static final String flowNameHeader = "x-flow";
 
     private final HttpClient httpClient;
     private final ObjectMapper mapper;
@@ -49,11 +48,12 @@ public class HttpEventsSubmitter implements EventsSubmitter {
         List<Map<String, Object>> events = List.of(eventData);
         final String body = mapper.writeValueAsString(events);
 
-        FlowsConfigurations.FlowConfiguration config = configuration.getByName(flow);
+        String submitEndpoint = configuration.getSubmitEndpoint(flow);
+        String eventHeader = configuration.getEventHeader(flow);
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(config.submitEndpoint()))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(submitEndpoint))
                 .header(contentTypeHeader,jsonContentType)
-                .header(flowNameHeader, flow)
+                .header(eventHeader, flow)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 

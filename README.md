@@ -20,13 +20,12 @@ algorithm (although if desired is possible to collect data by explicitly calling
 
 ## TODO
 
-- Add custom flow config in sample-app
-- Allow to customize flow-name header
 - Start documentation
 - Add reflection caching
+- Allow to capture the same field in multiple flows
+- Create final documentation
+
+## NTH
 - Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
 - Allow simple operations over sets (like counting elements)
 - Allow to declare default flow name at class level
-- Allow to capture the same field in multiple flows
-- Capture on records
-- Create final documentation
