@@ -321,4 +321,32 @@ public class EventsCollectorManagerIntegrationTest {
         assertEquals(0, eventsCollectorManager.getCollection(flow02Name).size());
         assertEquals(0, eventsCollectorManager.getCollection(flow03Name).size());
     }
+
+    @Test
+    void givenCustomFlowConfig_whenSubmitIsCalled_thenCustomConfigShouldBeUsedInCollectionAndSubmission() throws IOException, InterruptedException {
+        stubFor(post(urlMatching("/collect/flow-a"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.SC_OK)
+                )
+        );
+
+        final String flow = "flowAStar";
+        final String key = "foo";
+        final String value = "bar";
+
+        eventsCollectorManager.begin(flow);
+        eventsCollectorManager.collect(flow, key, value);
+        eventsCollectorManager.submit(flow);
+
+        verifyAsync(1, postRequestedFor(urlMatching("/collect/flow-a"))
+                        .withHeader(HttpEventsSubmitter.flowNameHeader, equalTo(flow))
+                        .withRequestBody(matchingJsonPath("$[0].foo", containing(value)))
+                        .withRequestBody(matchingJsonPath("$[0].flow_a_key", matching("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))),
+                1000
+        );
+
+
+        Set<Map.Entry<String, Object>> collection = eventsCollectorManager.getCollection();
+        assertEquals(0, collection.size());
+    }
 }

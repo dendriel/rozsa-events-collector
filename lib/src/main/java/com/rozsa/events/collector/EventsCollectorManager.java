@@ -16,16 +16,16 @@ public class EventsCollectorManager {
     private static final ThreadLocal<CollectionContextHandler> collections = ThreadLocal.withInitial(CollectionContextHandler::new);
     public static final String defaultFlow = "default";
 
-    private final String idFieldKey;
+    private final EventsCollectorFlowConfiguration configuration;
     private final EventsIdGenerator eventsIdGenerator;
     private final EventsSubmitter eventsSubmitter;
 
     public EventsCollectorManager(
-            final String idFieldKey,
+            final EventsCollectorFlowConfiguration configuration,
             final EventsIdGenerator eventsIdGenerator,
             final EventsSubmitter eventsSubmitter
         ) {
-        this.idFieldKey = idFieldKey;
+        this.configuration = configuration;
         this.eventsIdGenerator = eventsIdGenerator;
         this.eventsSubmitter = eventsSubmitter;
     }
@@ -39,10 +39,11 @@ public class EventsCollectorManager {
 
         getCollectionContextHandler().initialize(flow);
 
+        FlowsConfigurations.FlowConfiguration config = configuration.getByName(flow);
         Object id = eventsIdGenerator.generate();
-        collect(flow, idFieldKey, id);
+        collect(flow, config.eventKey(), id);
 
-        log.debug("[flow:{}] Collection context has initialized. Current event ID is '{}={}'", flow, idFieldKey, id);
+        log.debug("[flow:{}] Collection context has initialized. Current event ID is '{}={}'", flow, config.eventKey(), id);
     }
 
     /**
