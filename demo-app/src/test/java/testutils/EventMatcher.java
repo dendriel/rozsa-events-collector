@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.ValueMatcher;
-import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,16 +15,24 @@ public class EventMatcher implements ValueMatcher<Request> {
 
     private final List<Map<String, Object>> expectedEvents;
 
-    private EventMatcher(final List<Map<String, Object>> expectedEvents) {
+    private final String idKey;
+
+    private EventMatcher(final List<Map<String, Object>> expectedEvents, final String idKey) {
         this.expectedEvents = expectedEvents;
+        this.idKey = idKey;
     }
 
     public static EventMatcher of(final List<Map<String, Object>> expectedEvents) {
-        return new EventMatcher(expectedEvents);
+        return new EventMatcher(expectedEvents, null);
     }
 
     public static EventMatcher of(final Map<String, Object> expectedEvent) {
-        return new EventMatcher(List.of(expectedEvent));
+        return new EventMatcher(List.of(expectedEvent), null);
+    }
+
+    // the same idKey will be expected in all events.
+    public static EventMatcher of(final Map<String, Object> expectedEvent, final String idKey) {
+        return new EventMatcher(List.of(expectedEvent), idKey);
     }
 
     @Override
@@ -60,6 +67,9 @@ public class EventMatcher implements ValueMatcher<Request> {
                 }
             });
 
+            if (idKey != null) {
+                matchers.add(MatchResult.of(data.containsKey(idKey)));
+            }
         }
 
         return MatchResult.aggregate(matchers);

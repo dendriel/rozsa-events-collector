@@ -36,5 +36,4 @@ public class DatabaseData {
     public Owner getOwnerById(final Long id) {
         return ownerRepository.findById(id).orElseThrow();
     }
-
 }

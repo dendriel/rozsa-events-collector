@@ -1,5 +1,6 @@
 package com.rozsa.demoapp.resources;
 
+import com.rozsa.demoapp.configuration.collector.PetDescriptionFlowKeys;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.domain.PetType;
 import com.rozsa.demoapp.resources.dto.PetRequest;
@@ -8,6 +9,8 @@ import com.rozsa.demoapp.resources.mapper.PetMapper;
 import com.rozsa.demoapp.service.PetService;
 import com.rozsa.demoapp.service.model.PetFilter;
 import com.rozsa.events.collector.annotations.BeginCollecting;
+import com.rozsa.events.collector.annotations.Collect;
+import com.rozsa.events.collector.annotations.CollectParameter;
 import com.rozsa.events.collector.annotations.CollectReturn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,9 +57,13 @@ public class PetResource {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping( "/all")
+    @BeginCollecting(flow = PetDescriptionFlowKeys.PET_DESC_FLOW)
+    @Collect
+    @GetMapping( "/description")
     public List<String> getPetsDescription(
+            @CollectParameter(flow = PetDescriptionFlowKeys.PET_DESC_FLOW, key = PetDescriptionFlowKeys.PET_NAME)
             @RequestParam(required = false) String name,
+            @CollectParameter(flow = PetDescriptionFlowKeys.PET_DESC_FLOW, key = PetDescriptionFlowKeys.PET_COLOR)
             @RequestParam(required = false) String color
     ) {
         return petService.getDescriptions(name, color);

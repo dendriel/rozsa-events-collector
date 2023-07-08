@@ -1,8 +1,6 @@
 package com.rozsa.demoapp.collection;
 
 import com.rozsa.demoapp.configuration.collector.FindFavouritePetFlowKeys;
-import com.rozsa.demoapp.configuration.collector.OwnerFavouritePetFlowKeys;
-import com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys;
 import com.rozsa.demoapp.domain.Owner;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.mocks.DatabaseData;
@@ -28,21 +26,13 @@ import static testutils.AsyncTestUtils.verifyAsync;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
-public class OwnerFavouritePetResourceTest {
+public class OwnerFavouritePetFlowTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
     @Autowired
     private DatabaseData db;
-
-    /**
-     * TODO:
-     *
-     * Add more test scenarios:
-     * - configurable flows
-     * - id and submitter bean overriding
-     */
 
     /**
      * Initializes a custom flow

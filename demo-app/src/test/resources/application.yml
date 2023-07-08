@@ -1,9 +1,13 @@
 rozsa:
   events-collector:
     submit:
-      endpoint: 'http://localhost:${wiremock.server.port:8888}/collect'
+      endpoint: 'http://localhost:${wiremock.server.port}/collect'
     event:
       key: 'event_id'
+    flows:
+      pet_description:
+        submit-endpoint: 'http://localhost:${wiremock.server.port:8888}/collect/pet/description'
+        event-key: 'custom_flow_id_key'
 
 spring:
   h2:
