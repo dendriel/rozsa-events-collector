@@ -41,11 +41,11 @@ public class OwnerResource {
     }
 
     @BeginCollecting(flow = OWNER_FAV_PET_FLOW)
-    @Collect
+    @Collect(flow = OWNER_FAV_PET_FLOW)
     @GetMapping("/{id}")
     ResponseEntity<OwnerResponse> getOwner(
             @PathVariable
-            @CollectParameter(flow = OWNER_FAV_PET_FLOW, key = OWNER_ID) Long id) {
+            @CollectParameter(key = OWNER_ID) Long id) {
 
         Optional<Owner> optOwner = ownerService.findById(id);
 

@@ -24,8 +24,10 @@ public @interface CollectParameter {
     String key() default "";
 
     /**
-     * Instead of using the own parameter as the capture value, look for a field from this parameter marked
+     * Instead of using the own parameter as the collect value, look for a field from this parameter marked
      * with @CollectField. Will collect all fields marked for collection inside the parameter.
+     * true - scan fields from the object
+     * false - capture the object itself (default)
      * @see CollectField
      */
     boolean scanFields() default false;

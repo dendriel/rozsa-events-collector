@@ -39,10 +39,7 @@ public class PetService {
     }
 
     @Collect
-    public List<String> getDescriptions(
-            @CollectParameter("nameFilter") final String name,
-            @CollectParameter("colorFilter") final String color
-    ) {
+    public List<String> getDescriptions(final String name, final String color) {
         Iterable<Pet> pets;
 
         // do not select in production software without limiting results.

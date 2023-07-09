@@ -61,19 +61,20 @@ public class CollectAspect {
             final Object value = args[i];
             CollectParameter collectParameter = param.getAnnotation(CollectParameter.class);
 
+            String targetFlow = collectParameter.flow().isBlank() ? flow : collectParameter.flow();
+
             if (!collectParameter.collector().isBlank()) {
                 String collectorName = collectParameter.collector();
                 ObjectCollector collector = objectCollectorManager.getBean(collectorName);
-                collector.collect(flow, value, eventsCollectorManager);
+                collector.collect(targetFlow, value, eventsCollectorManager);
                 return;
             }
 
             if (collectParameter.scanFields()) {
-                FieldCollector.collectField(flow, value, eventsCollectorManager);
+                FieldCollector.collectField(targetFlow, value, eventsCollectorManager);
                 continue;
             }
 
-            String targetFlow = collectParameter.flow().isBlank() ? flow : collectParameter.flow();
             String key = getKey(collectParameter);
             key = key == null || key.isBlank() ? param.getName() : key;
             eventsCollectorManager.collect(targetFlow, key, value);

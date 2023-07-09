@@ -85,9 +85,6 @@ public class EventsCollectorManager {
         clear(flow);
     }
 
-    /**
-     * @return Creates and returns a shallow copy of the collected data so far.
-     */
     public Set<Map.Entry<String, Object>> getCollection() {
         return getCollection(defaultFlow);
     }

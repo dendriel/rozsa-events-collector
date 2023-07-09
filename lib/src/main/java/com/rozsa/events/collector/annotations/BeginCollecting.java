@@ -21,6 +21,8 @@ public @interface BeginCollecting {
 
     /**
      * Should submit the event even if an exception is throw?
+     * true - submit on error (default);
+     * false - do not submit on error.
      */
     boolean submitOnError() default true;
 

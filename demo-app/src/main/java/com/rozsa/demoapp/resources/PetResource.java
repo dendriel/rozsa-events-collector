@@ -58,13 +58,11 @@ public class PetResource {
     }
 
     @BeginCollecting(flow = PetDescriptionFlowKeys.PET_DESC_FLOW)
-    @Collect
+    @Collect(flow = PetDescriptionFlowKeys.PET_DESC_FLOW)
     @GetMapping( "/description")
     public List<String> getPetsDescription(
-            @CollectParameter(flow = PetDescriptionFlowKeys.PET_DESC_FLOW, key = PetDescriptionFlowKeys.PET_NAME)
-            @RequestParam(required = false) String name,
-            @CollectParameter(flow = PetDescriptionFlowKeys.PET_DESC_FLOW, key = PetDescriptionFlowKeys.PET_COLOR)
-            @RequestParam(required = false) String color
+            @CollectParameter(key = PetDescriptionFlowKeys.PET_NAME) @RequestParam(required = false) String name,
+            @CollectParameter(key = PetDescriptionFlowKeys.PET_COLOR) @RequestParam(required = false) String color
     ) {
         return petService.getDescriptions(name, color);
     }
