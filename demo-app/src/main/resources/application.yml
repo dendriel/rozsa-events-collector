@@ -21,8 +21,8 @@ logging:
 rozsa:
   events-collector:
     submit-endpoint: 'http://localhost:8090/collect'
-    event-key: 'event_id'
+    event-id-key: 'event_id'
     flows:
       flowAStar:
         submit-endpoint: 'http://localhost:9999/collect/flow-a'
-        event-key: 'flow_a_key'
+        event-id-key: 'flow_a_key'

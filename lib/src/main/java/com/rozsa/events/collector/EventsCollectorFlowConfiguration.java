@@ -16,17 +16,17 @@ public class EventsCollectorFlowConfiguration {
 
     public EventsCollectorFlowConfiguration(
             final String defaultSubmitEndpoint,
-            final String defaultEventKey,
+            final String defaultEventIdKey,
             final String eventHeader,
             final FlowsConfigurations flowsConfigurations
     ) {
         this.flowsConfigurations = Optional.ofNullable(flowsConfigurations)
                 .orElse(FlowsConfigurations.create());
-        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventKey, eventHeader);
+        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventIdKey, eventHeader);
     }
 
-    public String getEventKey(final String flowName) {
-        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventKey);
+    public String getEventIdKey(final String flowName) {
+        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventIdKey);
     }
 
     public String getSubmitEndpoint(final String flowName) {

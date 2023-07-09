@@ -10,13 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys.PET_RESPONSE_COLLECTOR;
+import static com.rozsa.demoapp.configuration.collector.PetFilterFlowKeys.PET_RESPONSE_ENTITY_COLLECTOR;
 
 @Slf4j
 @Configuration
 public class PetResponseCollector {
-
-    @Bean(PET_RESPONSE_COLLECTOR)
+    @Bean(PET_RESPONSE_ENTITY_COLLECTOR)
     public ObjectCollector petResponseCollector() {
         return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {
 

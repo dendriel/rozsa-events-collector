@@ -64,11 +64,11 @@ public class EventsCollectorAutoConfiguration {
     @Bean
     public EventsCollectorFlowConfiguration provideEventsCollectorFlowConfiguration(
             @Value("${rozsa.events-collector.submit-endpoint:http://localhost:8080/collect}") final String submitEndpoint,
-            @Value("${rozsa.events-collector.event-key:id}") final String eventKey,
+            @Value("${rozsa.events-collector.event-id-key:id}") final String eventIdKey,
             @Value("${rozsa.events-collector.event-header:x-flow}") final String eventHeader,
             final FlowsConfigurations flowsConfigurations
     ) {
-        return new EventsCollectorFlowConfiguration(submitEndpoint, eventKey, eventHeader, flowsConfigurations);
+        return new EventsCollectorFlowConfiguration(submitEndpoint, eventIdKey, eventHeader, flowsConfigurations);
     }
 
     @Bean

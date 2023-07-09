@@ -68,7 +68,7 @@ public class PetResource {
     }
 
     @BeginCollecting(flow = PET_FLOW)
-    @CollectReturn(flow = PET_FLOW, collector = PET_RESPONSE_COLLECTOR)
+    @CollectReturn(flow = PET_FLOW, collector = PET_RESPONSE_ENTITY_COLLECTOR)
     @GetMapping("/find")
     public ResponseEntity<PetResponse> findPetByFilter(
             @RequestParam String name, @RequestParam String color, @RequestParam Integer age, @RequestParam PetType type

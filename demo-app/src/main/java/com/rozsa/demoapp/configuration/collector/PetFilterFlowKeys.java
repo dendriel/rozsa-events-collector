@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 public final class PetFilterFlowKeys {
     public static final String PET_FLOW = "pet_filtering";
 
-    public static final String PET_RESPONSE_COLLECTOR = "pet_response_collector";
+    public static final String PET_RESPONSE_ENTITY_COLLECTOR = "pet_response_entity_collector";
 
     public static final String RESPONSE_NAME = "response_name";
     public static final String FILTERS_AGE = "filters_age";

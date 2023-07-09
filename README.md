@@ -216,7 +216,7 @@ It automatically unwraps the value if using `Optional<?>` before collecting. So,
   Won't take effect if defined within a custom collector.
 
 ```java
-    @CollectReturn(flow = PET_FLOW, collector = "pet_response_collector")
+    @CollectReturn(flow = PET_FLOW, collector = "pet_response_entity_collector")
     public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
         ...
         }
@@ -257,16 +257,136 @@ If you need to collect event data 'by hand' you can use inject the `EventsCollec
 
 
 ## Custom Collector
-TODO
 
-## Configurations
-TODO
+Custom collectors are a way to define a customized logic to collect data. It can be used to handle complex objects or
+transformations that can't be collected by simply using the `scanFields` and `@CollectiField` features.
+
+To implement a custom collector, your have to provide a bean that implements a [ObjectCollector](/lib/src/main/java/com/rozsa/events/collector/api/ObjectCollector.java).
+The bean receives the collection `flow`, `source` object for collection and the `EventsCollectorManager` so the collection
+takes place. See the [Collect via EventsCollectorManager](#collect-via-eventscollectormanager) section for information about
+using the manager for data collection.
+
+The example code bellow defines a custom collector that is able to handle a `ResponseEntity<PetResponse>` and collect data from it.
+```java
+    @Bean("pet_response_entity_collector")
+    public ObjectCollector petResponseCollector() {
+        return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {
+            if (source instanceof ResponseEntity<?> target) {
+                if (target.getStatusCode() != HttpStatus.OK) {
+                    return;
+                }
+
+                if (target.getBody() instanceof PetResponse petResponse) {
+                    eventsCollectorManager.collect(flow, PetFilterFlowKeys.RESPONSE_NAME, petResponse.getName());
+                }
+            }
+        };
+    }
+```
+
+*You may include and use any other beans to help in the collection and collection as many data from the source object as needed.
+
+To use the custom collector, just set the collector bean name in the annotations that allows the `collector`. For instance,
+```java
+    @CollectReturn(flow = "pet_response_flow", collector = "pet_response_entity_collector")
+    public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
+        ...
+        }
+```
 
 ## Events ID Generator
 
-EventsIdGenerator
+When using `@BeginCollecting` to start a flow, an ID is auto-generated and added to the event data. The Events ID Generator
+is responsible for doing that.
 
-## Events Submission
+The default implementation of this component provides a `UUID` by using the java package `java.util.UUID.randomUUID`. This way,
+the default auto-generated key implementation will provide an ID entry in the following format:
+
+`{ "id": "e72f0041-ffb7-4f9d-9357-455249615c08" }`
+
+The Events ID Generator may be overridden by providing a bean of type [EventsIdGenerator](/lib/src/main/java/com/rozsa/events/collector/api/EventsIdGenerator.java).
+
+
+## Events Submitter
+
+The events submission is the final part of the collection process. The Events Submitter is the component in charge of packing and
+submitting the collected event data to the remote server.
+
+The default implementation of the Events Submitter is an HTTP submitter that packs the event data and `POST` it as a JSON
+body to the remoter server in the following format:
+
+````http request
+POST /collect HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Accept: */*
+x-flow: pet_flow
+Content-Length: 99
+
+{
+	"id": "e72f0041-ffb7-4f9d-9357-455249615c08",
+	"field-a": "DOG",
+	"age": 6,
+	"color": "Yellow"
+}
+````
+
+
+## Configurations
+
+Configurations allows to customize the collection behavior for each flow/type of event you want to observe. The following
+may be configured via `application.yml` or `application.properties`.
+
+- `submit-endpoint` - the endpoint of the remote serve in which events will be posted (default: `http://localhost:8080/collect`)
+- `event-id-key` - the key name for the auto-generated id in the events (default: `id`)
+- `event-header` - the name of the auto-inserted header with the event flow name  (default: `x-flow`)
+
+The library `general` configuration is defined inside the `rozsa.events-collector` hierarchy:
+
+```yml
+rozsa:
+  events-collector:
+    submit-endpoint: 'http://localhost:8080/collect'
+    event-id-key: 'custom-id'
+    event-header: 'x-flow-custom'
+```
+
+You may also define the same configuration above for each one of your custom flows. To do that, define a field named `flows`,
+the custom flow name and its properties, as follows:
+
+```yml
+rozsa:
+  events-collector:
+    submit-endpoint: 'http://localhost:${wiremock.server.port}/collect'
+    event-id-key: 'custom-id'
+    event-header: 'x-flow-custom'
+    flows:
+      flowAStar:
+        submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-a'
+        event-id-key: 'flow_a_key'
+        event-header: 'x-events-collection'
+      flowB:
+        submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-b'
+```
+
+When defining custom flows configuration, the logic to follow is that you are overriding the general configuration. Thus,
+if a field is not defined in the custom flow configuration, the general configuration will be used as fallback. For example:
+
+```yml
+rozsa:
+  events-collector:
+    submit-endpoint: 'http://localhost:${wiremock.server.port}/collect'
+    event-id-key: 'custom-id'
+    event-header: 'x-flow-custom'
+    flows:
+      flowB:
+        submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-b'
+```
+
+We have defined a custom flow named `flowB` that defines only the `submit-endpoint`. This way, the `event-id-key` and `event-header`
+values will fall back to the general configuration values `custom-id` and `x-flow-custom` respectively. If no general configuration is
+defined, the default configuration will be used (`id` and `x-flow`).
+
 
 ## TODO
 

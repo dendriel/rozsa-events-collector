@@ -1,15 +1,15 @@
 rozsa:
   events-collector:
     submit-endpoint: 'http://localhost:${wiremock.server.port}/collect'
-    event-key: 'event_id'
+    event-id-key: 'event_id'
     event-header: 'x-flow'
     flows:
       flowAStar:
         submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-a'
-        event-key: 'flow_a_key'
+        event-id-key: 'flow_a_key'
       flowB:
         submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-b'
-        event-key: 'flow_b_key'
+        event-id-key: 'flow_b_key'
 
 
 spring:

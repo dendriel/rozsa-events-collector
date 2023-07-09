@@ -11,4 +11,5 @@ public class PetRequest {
     private Integer age;
     private String color;
     private PetType type;
+    private Long owner;
 }
