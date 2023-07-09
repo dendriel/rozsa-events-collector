@@ -49,11 +49,11 @@ public class HttpEventsSubmitter implements EventsSubmitter {
         final String body = mapper.writeValueAsString(events);
 
         String submitEndpoint = configuration.getSubmitEndpoint(flow);
-        String eventHeader = configuration.getEventHeader(flow);
+        String eventFlowHeader = configuration.getEventFlowHeader(flow);
 
         HttpRequest request = HttpRequest.newBuilder(URI.create(submitEndpoint))
                 .header(contentTypeHeader,jsonContentType)
-                .header(eventHeader, flow)
+                .header(eventFlowHeader, flow)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 

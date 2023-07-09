@@ -17,12 +17,12 @@ public class EventsCollectorFlowConfiguration {
     public EventsCollectorFlowConfiguration(
             final String defaultSubmitEndpoint,
             final String defaultEventIdKey,
-            final String eventHeader,
+            final String defaultEventFlowHeader,
             final FlowsConfigurations flowsConfigurations
     ) {
         this.flowsConfigurations = Optional.ofNullable(flowsConfigurations)
                 .orElse(FlowsConfigurations.create());
-        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventIdKey, eventHeader);
+        defaultFlow = new FlowsConfigurations.FlowConfiguration(defaultSubmitEndpoint, defaultEventIdKey, defaultEventFlowHeader);
     }
 
     public String getEventIdKey(final String flowName) {
@@ -33,8 +33,8 @@ public class EventsCollectorFlowConfiguration {
         return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::submitEndpoint);
     }
 
-    public String getEventHeader(final String flowName) {
-        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventHeader);
+    public String getEventFlowHeader(final String flowName) {
+        return getOrDefault(flowName, FlowsConfigurations.FlowConfiguration::eventFlowHeader);
     }
 
     private String getOrDefault(final String flowName,

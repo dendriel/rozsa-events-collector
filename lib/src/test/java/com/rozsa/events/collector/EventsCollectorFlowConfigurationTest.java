@@ -15,24 +15,24 @@ public class EventsCollectorFlowConfigurationTest {
     void givenConfigWithDefaultValues_whenCalledWithAnyFlowName_thenShouldReturnDefaults() {
        String submitEndpoint = "https://default.com/collect";
        String eventIdKey = "df_key";
-       String eventHeader = "x-flow-xpto";
+       String eventFlowHeader = "x-flow-xpto";
 
         FlowsConfigurations flowsConfigurations = new FlowsConfigurations(Map.of());
 
         EventsCollectorFlowConfiguration config = new EventsCollectorFlowConfiguration(
-                submitEndpoint, eventIdKey, eventHeader, flowsConfigurations
+                submitEndpoint, eventIdKey, eventFlowHeader, flowsConfigurations
         );
 
         assertEquals(submitEndpoint, config.getSubmitEndpoint("xpto"));
         assertEquals(eventIdKey, config.getEventIdKey("foo"));
-        assertEquals(eventHeader, config.getEventHeader("bar"));
+        assertEquals(eventFlowHeader, config.getEventFlowHeader("bar"));
     }
 
     @Test
     void givenConfigWithCustomFlow_whenCalledWithCustomFlowName_thenShouldReturnCustomValues() {
         String submitEndpoint = "https://default.com/collect";
         String eventIdKey = "df_key";
-        String eventHeader = "x-flow-xpto";
+        String eventFlowHeader = "x-flow-xpto";
 
         String flowName = "customized-flow";
         String flowSubmitEndpoint = "https://custom.flow.com/collect";
@@ -44,19 +44,19 @@ public class EventsCollectorFlowConfigurationTest {
         FlowsConfigurations flowsConfigurations = new FlowsConfigurations(Map.of(flowName, flowConfig));
 
         EventsCollectorFlowConfiguration config = new EventsCollectorFlowConfiguration(
-                submitEndpoint, eventIdKey, eventHeader, flowsConfigurations
+                submitEndpoint, eventIdKey, eventFlowHeader, flowsConfigurations
         );
 
         assertEquals(flowSubmitEndpoint, config.getSubmitEndpoint(flowName));
         assertEquals(flowEventIdKey, config.getEventIdKey(flowName));
-        assertEquals(flowEventHeader, config.getEventHeader(flowName));
+        assertEquals(flowEventHeader, config.getEventFlowHeader(flowName));
     }
 
     @Test
     void givenPartialCustomFlowConfig_whenCalledWithCustomFlowName_thenShouldReturnCustomValuesOnlyIfPresent() {
         String submitEndpoint = "https://default.com/collect";
         String eventIdKey = "df_key";
-        String eventHeader = "x-flow-xpto";
+        String eventFlowHeader = "x-flow-xpto";
 
         String flowName = "customized-flow";
         String flowEventHeader = "x-flow-custom";
@@ -66,11 +66,11 @@ public class EventsCollectorFlowConfigurationTest {
         FlowsConfigurations flowsConfigurations = new FlowsConfigurations(Map.of(flowName, flowConfig));
 
         EventsCollectorFlowConfiguration config = new EventsCollectorFlowConfiguration(
-                submitEndpoint, eventIdKey, eventHeader, flowsConfigurations
+                submitEndpoint, eventIdKey, eventFlowHeader, flowsConfigurations
         );
 
         assertEquals(submitEndpoint, config.getSubmitEndpoint(flowName));
         assertEquals(eventIdKey, config.getEventIdKey(flowName));
-        assertEquals(flowEventHeader, config.getEventHeader(flowName));
+        assertEquals(flowEventHeader, config.getEventFlowHeader(flowName));
     }
 }

@@ -317,17 +317,16 @@ body to the remoter server in the following format:
 
 ````http request
 POST /collect HTTP/1.1
-Host: localhost:8080
+Host: localhost:8090
+User-Agent: Java-http-client/17.0.7
 Content-Type: application/json
-Accept: */*
-x-flow: pet_flow
+x-flow: pet_description
 Content-Length: 99
 
 {
-	"id": "e72f0041-ffb7-4f9d-9357-455249615c08",
-	"field-a": "DOG",
-	"age": 6,
-	"color": "Yellow"
+	"event_id": "e72f0041-ffb7-4f9d-9357-455249615c08",
+	"pet_name": "Tri",
+	"pet_color": "Yellow"
 }
 ````
 
@@ -339,7 +338,7 @@ may be configured via `application.yml` or `application.properties`.
 
 - `submit-endpoint` - the endpoint of the remote serve in which events will be posted (default: `http://localhost:8080/collect`)
 - `event-id-key` - the key name for the auto-generated id in the events (default: `id`)
-- `event-header` - the name of the auto-inserted header with the event flow name  (default: `x-flow`)
+- `event-flow-header` - the name of the auto-inserted header with the event flow name  (default: `x-flow`)
 
 The library `general` configuration is defined inside the `rozsa.events-collector` hierarchy:
 
@@ -348,7 +347,7 @@ rozsa:
   events-collector:
     submit-endpoint: 'http://localhost:8080/collect'
     event-id-key: 'custom-id'
-    event-header: 'x-flow-custom'
+    event-flow-header: 'x-flow-custom'
 ```
 
 You may also define the same configuration above for each one of your custom flows. To do that, define a field named `flows`,
@@ -359,12 +358,12 @@ rozsa:
   events-collector:
     submit-endpoint: 'http://localhost:${wiremock.server.port}/collect'
     event-id-key: 'custom-id'
-    event-header: 'x-flow-custom'
+    event-flow-header: 'x-flow-custom'
     flows:
       flowAStar:
         submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-a'
         event-id-key: 'flow_a_key'
-        event-header: 'x-events-collection'
+        event-flow-header: 'x-events-collection'
       flowB:
         submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-b'
 ```
@@ -377,7 +376,7 @@ rozsa:
   events-collector:
     submit-endpoint: 'http://localhost:${wiremock.server.port}/collect'
     event-id-key: 'custom-id'
-    event-header: 'x-flow-custom'
+    event-flow-header: 'x-flow-custom'
     flows:
       flowB:
         submit-endpoint: 'http://localhost:${wiremock.server.port}/collect/flow-b'
