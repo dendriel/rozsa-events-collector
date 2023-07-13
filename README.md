@@ -1,9 +1,9 @@
 ![Unit Tests](https://github.com/dendriel/rozsa-events-collector/actions/workflows/gradle.yml/badge.svg)
 # Rozsa Events Collector
 
-Rozsa Events Collector is a **spring-based library** that easies the **collection** and **transmission** of events in an execution flow.
+Rozsa Events Collector is a **spring-based java library** that easies the **collection** and **transmission** of events in execution flows.
 
-The basic usage of this library is just to mark target elements from an execution flow. When this flow is called then the
+The basic usage of this library is just to mark target elements for collection in an execution flow. When this flow is called then the
 expected data will be collected and submitted for a remove server of choice as a map o objects. The submission behavior
 may be replaced by your custom logic if necessary.
 
@@ -11,21 +11,20 @@ To avoid cluttering the business code with observability related functionalities
 based approach for marking methods, parameters and fields for collection without any further changes in the main
 algorithm. Although if desired, it is possible to collect data by explicitly calling the collector.
 
-**This doc is under construction. You may refer to the [project draft](doc/DRAFT.md) for more information.**
 
 ## Terms
 
-- **Data** - a single element that means something for the specific flow in observation;
-- **Event** - a composition of many pieces of data that have a deeper meaning when grouped together;
-- **Collect** - the action of storing data from an execution flow;
-- **Submit** - the action of generating an event from collected data and submitting it to a remote server.
+- **Data** - a single element that means something for the specific flow in observation
+- **Event** - a composition of many pieces of data that have a deeper meaning when grouped together
+- **Collect** - the action of storing data from an execution flow
+- **Submit** - the action of generating an event from collected data and submitting it to a remote server
 
 ## Features
 
 - Easily **start**, **collect** and **finish** the collection of data by using the `EventsCollectorManager`
 - Keep observability operations out of business code by using **Annotations**
 - Control collection behavior via **configuration** or by bean **overriding**
-- Start using the library by just adding it to the project dua to its **auto-configuration**
+- Start using the library by just adding it to the project due to its **auto-configuration**
 - Allows to define and collect from **multiple flows**
 
 ## How To
@@ -323,13 +322,14 @@ Content-Type: application/json
 x-flow: pet_description
 Content-Length: 99
 
-{
+[{
 	"event_id": "e72f0041-ffb7-4f9d-9357-455249615c08",
 	"pet_name": "Tri",
 	"pet_color": "Yellow"
-}
+}]
 ````
 
+*You may refer to the [demo-server collection endpoint](/demo-server/src/main/java/com/rozsa/demoserver/resources/CollectorResource.java)  example to see how the events may be received in the remove server.
 
 ## Configurations
 
