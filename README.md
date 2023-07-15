@@ -309,7 +309,7 @@ The Events ID Generator may be overridden by providing a bean of type [EventsIdG
 ## Events Submitter
 
 The events submission is the final part of the collection process. The Events Submitter is the component in charge of packing and
-submitting the collected event data to the remote server.
+asynchronously submitting the collected event data to the remote server.
 
 The default implementation of the Events Submitter is an HTTP submitter that packs the event data and `POST` it as a JSON
 body to the remoter server in the following format:
@@ -328,6 +328,10 @@ Content-Length: 99
 	"pet_color": "Yellow"
 }]
 ````
+
+This library provided events submitter, the [HttpEventsSubmitter](/lib/src/main/java/com/rozsa/events/collector/HttpEventsSubmitter.java), is more an example implementation than a productive feature. Currently, it lacks some features for high throughput flows like grouping messages before submitting (coalescing) and a retry mechanism. 
+
+The Events Submitter may be overridden by providing a bean of type [EventsSubmitter](/lib/src/main/java/com/rozsa/events/collector/api/EventsSubmitter.java).
 
 *You may refer to the [demo-server collection endpoint](/demo-server/src/main/java/com/rozsa/demoserver/resources/CollectorResource.java)  example to see how the events may be received in the remove server.
 
