@@ -459,6 +459,7 @@ To publish the library locally use:
 
 ## TODO
 
+- Add javadoc do lib publish
 - Add tests for flow name overriding
 - Add reflection caching
 - Allow to capture the same field in multiple flows
