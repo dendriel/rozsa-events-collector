@@ -41,5 +41,5 @@ jobs:
       with:
         arguments: :rozsa-events-collector-starter:publish
       env:
-        USERNAME: ${{ github.actor }}
+        USERNAME: ${{ github.GITHUB_ACTOR }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
