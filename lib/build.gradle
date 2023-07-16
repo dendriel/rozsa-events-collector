@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
     id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
 }
@@ -13,6 +14,59 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
+
+// TODO: include javaDoc
+publishing {
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/dendriel/rozsa-events-collector")
+//            credentials {
+//                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+//                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+//            }
+//        }
+//    }
+
+    repositories {
+        mavenLocal()
+    }
+
+    publications {
+//        gpr(MavenPublication) {
+//            from(components.java)
+//        }
+
+        mavenJava(MavenPublication) {
+            artifact jar
+
+            pom {
+                name = 'Rozsa Events Collector'
+                description = 'A spring-based java library that easies the collection and transmission of events in execution flows.'
+                url = 'https://github.com/dendriel/rozsa-events-collector'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/license/mit/'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'dendriel'
+                        name = 'Vitor Rozsa'
+                        email = 'vitor.rozsa@hotmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:dendriel/rozsa-events-collector.git'
+                    developerConnection = 'scm:git:git@github.com:dendriel/rozsa-events-collector.git'
+                    url = 'https://github.com/dendriel/rozsa-events-collector'
+                }
+            }
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -23,4 +77,11 @@ tasks.named('bootJar') {
 
 tasks.named('jar') {
     enabled = true
+    // avoid the "-plain" suffix that may cause compatibilities issues with maven
+    archiveClassifier = ''
+
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
 }

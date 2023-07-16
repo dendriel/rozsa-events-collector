@@ -436,6 +436,26 @@ We have defined a custom flow named `flowB` that defines only the `submit-endpoi
 values will fall back to the general configuration values `custom-id` and `x-flow-custom` respectively. If no general configuration is
 defined, the default configuration will be used (`id` and `x-flow`).
 
+# Library Development
+
+## Modules
+
+- **lib** [rozsa-events-collector-starter] - main module with library source code
+- **demo-app** - application with library sample usage and tests
+- **demo-server** - minimal application with a collection endpoint
+
+## Running
+
+**demo-app** and **demo-server** run as plain spring-boot web applications. You may want to use the _services_ feature from
+Intellij to manage both apps running at the same time.
+
+The **library** may be developed and tested by using its unit tests or integration tests. Occasionally, it's interesting to
+use the demo-app and demo-server to validate some complex features.
+
+To publish the library locally use:
+
+`./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
+
 
 ## TODO
 
