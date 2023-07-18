@@ -4,7 +4,7 @@
 Rozsa Events Collector is a **spring-based java library** that easies the **collection** and **transmission** of events in execution flows.
 
 The basic usage of this library is just to mark target elements for collection in an execution flow. When this flow is called then the
-expected data will be collected and submitted for a remove server of choice as a map o objects. The submission behavior
+expected data will be collected and submitted to a remove server of choice as a map o objects. The submission behavior
 may be replaced by your custom logic if necessary.
 
 To avoid cluttering the business code with observability related functionalities, the library provides an annotation
@@ -456,12 +456,14 @@ To publish the library locally use:
 
 `./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
 
+
 ## TODO
 
 - Add javadoc do lib publish
 - Add tests for flow name overriding
 - Add reflection caching
 - Allow to capture the same field in multiple flows
+- Create final documentation
 
 ## NTH
 - Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
