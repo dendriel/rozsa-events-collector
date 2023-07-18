@@ -456,14 +456,12 @@ To publish the library locally use:
 
 `./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
 
-
 ## TODO
 
 - Add javadoc do lib publish
 - Add tests for flow name overriding
 - Add reflection caching
 - Allow to capture the same field in multiple flows
-- Create final documentation
 
 ## NTH
 - Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
@@ -471,3 +469,69 @@ To publish the library locally use:
 - Allow to declare default flow name at class level
 - Define a custom collector for CollectField
 - Allow to append an event field or header if the event has finished with a failure
+
+
+# Importing the Library
+
+## File loading
+
+1. Download the library resources
+2. Add it somewhere in your project or local machine
+3. Add it to your project dependencies inside `build.gradle`
+
+```yml
+dependencies {
+  implementation files('libs/1.0.0-ALPHA/rozsa-events-collector-starter-1.0.0-ALPHA.jar')
+}
+```
+
+*An example of this approach is available in Demo App [build.gradle](/demo-app/build.gradle).
+
+After adding the dependency, you may want to access any library resource, hit the **Choose sources..** option and select the `rozsa-events-collector-starter-1.0.0-ALPHA-sources.jar` to make all library documentation available while using the library.
+
+## Maven Local
+
+1. Download the library resources
+2. Create the following file path in your maven local repository
+   1. `.m2\repository\com\rozsa\rozsa-events-collector-starter`
+3. Unpack the library in there
+4. It should be something like the following
+
+```txt
+.m2\repository\com\rozsa\rozsa-events-collector-starter\1.0.0-ALPHA\
+
+rozsa-events-collector-starter-1.0.0-ALPHA.jar
+rozsa-events-collector-starter-1.0.0-ALPHA.module
+rozsa-events-collector-starter-1.0.0-ALPHA.pom
+rozsa-events-collector-starter-1.0.0-ALPHA-javadoc.jar
+rozsa-events-collector-starter-1.0.0-ALPHA-sources.jar
+```
+
+
+Alternatively, you can download this repository and execute the following command to install the library in maven local:
+- `./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
+
+5. Update your `build.gradle` to lookup into maven local and to include the library dependency.
+```yml
+repositories {
+  mavenLocal()
+}
+
+dependencies {
+  implementation 'com.rozsa:rozsa-events-collector-starter:1.0.0-ALPHA'
+}
+```
+
+*An example of this approach is available in Demo App [build.gradle](/demo-app/build.gradle).
+
+Also, you may want to follow the steps described in the File Loading approach to set up the library sources to have the library documentation available.
+
+
+## Github Packages
+
+TODO
+
+
+## Custom Repository Manager
+
+If you want to use this library in your organization, you can publish it to your org package repository (like JFrog or Nexus). If this is the case, I would recommend you to copy the project or duplicate this repository into your organization vcs (git), so you are in control of the code and can improve or change it as you like.

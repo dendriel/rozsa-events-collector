@@ -75,6 +75,10 @@ publishing {
     }
 }
 
+tasks.withType(GenerateModuleMetadata) {
+    enabled = true
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -95,34 +99,3 @@ tasks.named('jar') {
                 'Implementation-Version': project.version)
     }
 }
-
-//tasks.register('javadocJar', Jar) {
-//    from javadoc.destinationDir
-////    archiveClassifier.set('javadoc')
-//    classifier = 'javadoc'
-//}
-//
-//// Configuração do JAR com sources
-//tasks.register('sourcesJar', Jar) {
-//    from sourceSets.main.allSource
-////    archiveClassifier.set('sources')
-//    classifier = 'sources'
-//}
-
-//tasks.named('javadocJar', Jar) {
-////    type('jar')
-//    dependsOn 'javadoc'
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-
-//tasks.register('javadocJar', Jar) {
-////    dependsOn 'javadoc'
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-
-// Configuração das dependências do Javadoc
-//dependencies {
-//    javadoc 'com.example:my-library:1.0.0'
-//}

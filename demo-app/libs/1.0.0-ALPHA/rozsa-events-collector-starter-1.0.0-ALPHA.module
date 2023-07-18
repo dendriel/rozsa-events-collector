@@ -1,0 +1,116 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.rozsa",
+    "module": "rozsa-events-collector-starter",
+    "version": "1.0.0-ALPHA",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.1.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "rozsa-events-collector-starter-1.0.0-ALPHA.jar",
+          "url": "rozsa-events-collector-starter-1.0.0-ALPHA.jar",
+          "size": 31534,
+          "sha512": "2d918aebb578e9e5ebbbad28040ef57e0bfc116bb211e58cd294cd4d35d4f9647b388739fa2a391b4b6f1f7076125a54e223f84af7a11e239bcead41ddd42864",
+          "sha256": "8d5695f596c9de33aa9a407dfd9c4d5d4f0d2f0120c84877a4d1062ee0cb7c56",
+          "sha1": "6aa2cb7b67ec98adfef343088e17e32432d15a0d",
+          "md5": "805ee76525e44eece62a107a48fdcd1b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter-aop",
+          "version": {
+            "requires": "3.1.0"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "module": "jackson-databind",
+          "version": {
+            "requires": "2.15.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "rozsa-events-collector-starter-1.0.0-ALPHA.jar",
+          "url": "rozsa-events-collector-starter-1.0.0-ALPHA.jar",
+          "size": 31534,
+          "sha512": "2d918aebb578e9e5ebbbad28040ef57e0bfc116bb211e58cd294cd4d35d4f9647b388739fa2a391b4b6f1f7076125a54e223f84af7a11e239bcead41ddd42864",
+          "sha256": "8d5695f596c9de33aa9a407dfd9c4d5d4f0d2f0120c84877a4d1062ee0cb7c56",
+          "sha1": "6aa2cb7b67ec98adfef343088e17e32432d15a0d",
+          "md5": "805ee76525e44eece62a107a48fdcd1b"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "rozsa-events-collector-starter-1.0.0-ALPHA-javadoc.jar",
+          "url": "rozsa-events-collector-starter-1.0.0-ALPHA-javadoc.jar",
+          "size": 172623,
+          "sha512": "908f1e92e5fec55f60980b0fc4c0317b5b691930f9c5c3921b71f3f1b661054cc45e23e1d1293c2cdfa453daaa98ac33ea410dd8560260e8eeb6da4706989ba7",
+          "sha256": "d4630fce44606fd339d1ff1bdac7d42b9b7117f64c2bcb73a144693b6169a783",
+          "sha1": "77f2ec834f660ed997f6ee6d467f916a3fba441d",
+          "md5": "3ed90ed5b0df3612c3f107cd93b1ac18"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "rozsa-events-collector-starter-1.0.0-ALPHA-sources.jar",
+          "url": "rozsa-events-collector-starter-1.0.0-ALPHA-sources.jar",
+          "size": 20490,
+          "sha512": "1bfc22654d1a7c1affeeb0a6db16fb54cc80ac5ee8b5ddb7086145c4646a26f367017f0e8b4443cce9332bc54ae373660e20a27ea65b7938ea25d5f515b42a1b",
+          "sha256": "063b41c4656e7c01956197ecc654c661f464c304dc60f3be79f9fc3c985f8c8d",
+          "sha1": "f1c56e9e193715077e66a65e576d11e3bd395311",
+          "md5": "3d4da5a9a5493473d36d6e3a5c003c18"
+        }
+      ]
+    }
+  ]
+}
