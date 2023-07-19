@@ -98,10 +98,10 @@ This annotation is mandatory to start a collection flow. If the flow isn't start
 other annotations were used.
 
 ```Java
-    @BeginCollecting
-    public ResponseEntity<PetResponse> getPetByName(String name) {
-        ...
-    }
+@BeginCollecting
+public ResponseEntity<PetResponse> getPetByName(String name) {
+    ...
+}
 ```
 
 #### Options
@@ -110,43 +110,43 @@ other annotations were used.
 configuration. This is optional but recommended.
 - `submitOnError` - allows to submit event data even if the method returns with an exception (default: true)
 ```Java
-    @BeginCollecting(flow = "xpto-flow-name", submitOnError = false)
+@BeginCollecting(flow = "xpto-flow-name", submitOnError = false)
 ```
 
 ### @Collect
 
 `scope: method`
 
-Use to inform that a method has parameters to be collected. Only methods marked with `@Collect` will be scanned for collection.
+Use to inform that a method has parameters to be collected. Only methods marked with `@Collect` will be scanned for collection. The
+collection will automatically finish when returning from the method marked with this annotation. It's possible to finish
+earlier by using the [@FinishCollecting](#finishcollecting) annotation.
 
 ```java
-    @Collect
-    ResponseEntity<OwnerResponse> getOwner(Long id) {
-        ...
-    }
+@Collect
+ResponseEntity<OwnerResponse> getOwner(Long id) {
+    ...
+}
 ```
 
 #### Options
 
 - `flow` -  if defined, it will be used as the collection flow when collecting parameters (unless the CollectParameter itself defines its flow).
 ```java
-    @Collect(flow = "foo-bar")
+@Collect(flow = "foo-bar")
 ```
 
 ### @CollectParameter
 
 `scope: parameter`
 
-Defines that a parameter has to be collected. It will be read only if the target method is annotated with `@Collect`. The
-collection will automatically finish when returning from the method marked with this annotation. It's possible to finish
-earlier by using the [@FinishCollecting](#finishcollecting) annotation.
+Defines that a parameter has to be collected. It will be read only if the target method is annotated with `@Collect`.
 ```java
-    @Collect
-    public Optional<Pet> getByName(
-            @CollectParameter("petName") final String name
-        ) {
-        ...
-    }
+@Collect
+public Optional<Pet> getByName(
+        @CollectParameter("petName") final String name
+    ) {
+    ...
+}
 ```
 
 The `@CollectParameter` may receive an optional string that will be used as the key of this parameter. If no key is specified,
@@ -167,32 +167,32 @@ Won't take effect if defined within a custom collector.
 
 Configure to `scanFields` from target parameter.
 ```java
-    @Collect
-    public Optional<Pet> findPetByFilters(
-            @CollectParameter(scanFields = true) final PetFilter filter
-        ) {
-        ...
-    }
+@Collect
+public Optional<Pet> findPetByFilters(
+        @CollectParameter(scanFields = true) final PetFilter filter
+    ) {
+    ...
+}
 ```
 
 Overrides `@Collect` defined flow.
 ```java
-    @Collect(flow = "xpto")
-    public Optional<Pet> getByName(
-        @CollectParameter(flow = "pet_flow", key = "petName") final String name
-    ) {
-    ...
-    }
+@Collect(flow = "xpto")
+public Optional<Pet> getByName(
+    @CollectParameter(flow = "pet_flow", key = "petName") final String name
+) {
+...
+}
 ```
 
 Defines a custom `collector`.
 ```java
-    @Collect
-    public Optional<Pet> findPetByFilters(
-            @CollectParameter(collector = 'pet_filter_collector') final PetFilter filter
-        ) {
-        ...
-    }
+@Collect
+public Optional<Pet> findPetByFilters(
+        @CollectParameter(collector = 'pet_filter_collector') final PetFilter filter
+    ) {
+    ...
+}
 ```
 
 ### @CollectField
@@ -237,18 +237,18 @@ public class Owner {
 
 Use this annotation to collect data from the returning object from a method.
 ```java
-    @CollectReturn("pet_id")
-    public Long createPet(PetRequest petRequest) {
-        ...
-        }
+@CollectReturn("pet_id")
+public Long createPet(PetRequest petRequest) {
+    ...
+}
 ```
 
 It automatically unwraps the value if using `Optional<?>` before collecting. So, this is also valid.
 ```java
-    @CollectReturn("pet_id")
-    public Optional<Long> createPet(PetRequest petRequest) {
-        ...
-        }
+@CollectReturn("pet_id")
+public Optional<Long> createPet(PetRequest petRequest) {
+    ...
+}
 ```
 
 #### Options
@@ -261,10 +261,10 @@ It automatically unwraps the value if using `Optional<?>` before collecting. So,
   Won't take effect if defined within a custom collector.
 
 ```java
-    @CollectReturn(flow = PET_FLOW, collector = "pet_response_entity_collector")
-    public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
-        ...
-        }
+@CollectReturn(flow = PET_FLOW, collector = "pet_response_entity_collector")
+public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
+    ...
+}
 ```
 
 *`@CollectReturn` only auto-unwrapp from `Optional<?>` type. No other wrapper types are auto-handled right now. In this cases it is
@@ -278,10 +278,10 @@ Use this annotation to finish a collection flow earlier. It will end the flow an
 a method marked by this annotation.
 
 ```java
-    @FinishCollecting(flow = "xpto")
-    public Long create(final Pet pet) {
-        ...
-    }
+@FinishCollecting(flow = "xpto")
+public Long create(final Pet pet) {
+    ...
+}
 ```
 #### Options
 
@@ -313,30 +313,30 @@ using the manager for data collection.
 
 The example code bellow defines a custom collector that is able to handle a `ResponseEntity<PetResponse>` and collect data from it.
 ```java
-    @Bean("pet_response_entity_collector")
-    public ObjectCollector petResponseCollector() {
-        return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {
-            if (source instanceof ResponseEntity<?> target) {
-                if (target.getStatusCode() != HttpStatus.OK) {
-                    return;
-                }
-
-                if (target.getBody() instanceof PetResponse petResponse) {
-                    eventsCollectorManager.collect(flow, PetFilterFlowKeys.RESPONSE_NAME, petResponse.getName());
-                }
+@Bean("pet_response_entity_collector")
+public ObjectCollector petResponseCollector() {
+    return (String flow, Object source, EventsCollectorManager eventsCollectorManager) -> {
+        if (source instanceof ResponseEntity<?> target) {
+            if (target.getStatusCode() != HttpStatus.OK) {
+                return;
             }
-        };
-    }
+
+            if (target.getBody() instanceof PetResponse petResponse) {
+                eventsCollectorManager.collect(flow, PetFilterFlowKeys.RESPONSE_NAME, petResponse.getName());
+            }
+        }
+    };
+}
 ```
 
 *You may include and use any other beans to help in the collection and collection as many data from the source object as needed.
 
 To use the custom collector, just set the collector bean name in the annotations that allows the `collector`. For instance,
 ```java
-    @CollectReturn(flow = "pet_response_flow", collector = "pet_response_entity_collector")
-    public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
-        ...
-        }
+@CollectReturn(flow = "pet_response_flow", collector = "pet_response_entity_collector")
+public ResponseEntity<PetResponse> findPetByFilter(String name, String color, Integer age, PetType type) {
+    ...
+}
 ```
 
 ## Events ID Generator
@@ -459,11 +459,8 @@ To publish the library locally use:
 
 ## TODO
 
-- Add javadoc do lib publish
 - Add tests for flow name overriding
-- Add reflection caching
 - Allow to capture the same field in multiple flows
-- Create final documentation
 
 ## NTH
 - Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
@@ -529,11 +526,45 @@ dependencies {
 Also, you may want to follow the steps described in the File Loading approach to set up the library sources to have the library documentation available.
 
 
-## Github Packages
+## Artifacts Repository
 
-TODO
+If you have an artifactory repository like Nexus or JFrog, you may upload the library to it.
 
+To publish in Nexus directly from this project use the following command:
 
-## Custom Repository Manager
+`./gradlew :rozsa-events-collector-starter:publish`
 
-If you want to use this library in your organization, you can publish it to your org package repository (like JFrog or Nexus). If this is the case, I would recommend you to copy the project or duplicate this repository into your organization vcs (git), so you are in control of the code and can improve or change it as you like.
+For this to work, you have to set the username and password in the environment as `NEXUS_USER` AND `NEXUS_PASS` respectively. You
+also may want to change the target repository URL inside the library [build.gradle](/lib/build.gradle):
+
+```yml
+repositories {
+    maven {
+        name = 'nexus'
+        url = 'http://localhost:8010/repository/maven-releases/'
+        allowInsecureProtocol = true
+        credentials {
+            username = System.getenv("NEXUS_USER")
+            password = System.getenv("NEXUS_PASS")
+        }
+    }
+}
+```
+
+In you target project (the one using the library), add the repository configuration and library dependency in the build.gradle (assuming you
+are using gradle), for instance:
+
+```yml
+repositories {
+    maven {
+        url = 'http://localhost:8010/repository/maven-releases/'
+        allowInsecureProtocol = true
+    }
+}
+
+dependencies {
+    implementation 'com.rozsa:rozsa-events-collector-starter:1.0.0-ALPHA'
+}
+```
+
+If you want to use this library in your organization, you can publish it to your org package repository. If this is the case, I would recommend you to copy the project or duplicate this repository into your organization VCS (git), so you are in control of the code and can improve or change it as you like.
