@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Including project submodule
-//     implementation project(':rozsa-events-collector-starter')
+     implementation project(':rozsa-events-collector-starter')
 
     // Directly downloaded library
 //    implementation files('libs/1.0.0-ALPHA/rozsa-events-collector-starter-1.0.0-ALPHA.jar')
@@ -37,7 +37,7 @@ dependencies {
 //    implementation 'com.rozsa:rozsa-events-collector-starter:1.0.0-ALPHA'
 
     // From nexus (requires nexus repository config)
-    implementation 'com.rozsa:rozsa-events-collector-starter:1.0.0-ALPHA'
+//    implementation 'com.rozsa:rozsa-events-collector-starter:1.0.0-ALPHA'
 
     compileOnly "org.projectlombok:lombok"
     testImplementation "org.projectlombok:lombok"
