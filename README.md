@@ -436,39 +436,6 @@ We have defined a custom flow named `flowB` that defines only the `submit-endpoi
 values will fall back to the general configuration values `custom-id` and `x-flow-custom` respectively. If no general configuration is
 defined, the default configuration will be used (`id` and `x-flow`).
 
-# Library Development
-
-## Modules
-
-- **lib** [rozsa-events-collector-starter] - main module with library source code
-- **demo-app** - application with library sample usage and tests
-- **demo-server** - minimal application with a collection endpoint
-
-## Running
-
-**demo-app** and **demo-server** run as plain spring-boot web applications. You may want to use the _services_ feature from
-Intellij to manage both apps running at the same time.
-
-The **library** may be developed and tested by using its unit tests or integration tests. Occasionally, it's interesting to
-use the demo-app and demo-server to validate some complex features.
-
-To publish the library locally use:
-
-`./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
-
-
-## TODO
-
-- Add tests for flow name overriding
-- Allow to capture the same field in multiple flows
-
-## NTH
-- Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
-- Allow simple operations over sets (like counting elements)
-- Allow to declare default flow name at class level
-- Define a custom collector for CollectField
-- Allow to append an event field or header if the event has finished with a failure
-
 
 # Importing the Library
 
@@ -492,7 +459,7 @@ After adding the dependency, you may want to access any library resource, hit th
 
 1. Download the library resources
 2. Create the following file path in your maven local repository
-   1. `.m2\repository\com\rozsa\rozsa-events-collector-starter`
+    1. `.m2\repository\com\rozsa\rozsa-events-collector-starter`
 3. Unpack the library in there
 4. It should be something like the following
 
@@ -568,3 +535,37 @@ dependencies {
 ```
 
 If you want to use this library in your organization, you can publish it to your org package repository. If this is the case, I would recommend you to copy the project or duplicate this repository into your organization VCS (git), so you are in control of the code and can improve or change it as you like.
+
+
+# Library Development
+
+## Modules
+
+- **lib** [rozsa-events-collector-starter] - main module with library source code
+- **demo-app** - application with library sample usage and tests
+- **demo-server** - minimal application with a collection endpoint
+
+## Running
+
+**demo-app** and **demo-server** run as plain spring-boot web applications. You may want to use the _services_ feature from
+Intellij to manage both apps running at the same time.
+
+The **library** may be developed and tested by using its unit tests or integration tests. Occasionally, it's interesting to
+use the demo-app and demo-server to validate some complex features.
+
+To publish the library locally use:
+
+`./gradlew :rozsa-events-collector-starter:publishToMavenLocal`
+
+
+## TODO
+
+- Add tests for flow name overriding
+- Allow to capture the same field in multiple flows
+
+## NTH
+- Allow to define reference values for the event (static key-value pairs in the BeginCollecting Annotation)
+- Allow simple operations over sets (like counting elements)
+- Allow to declare default flow name at class level
+- Define a custom collector for CollectField
+- Allow to append an event field or header if the event has finished with a failure
