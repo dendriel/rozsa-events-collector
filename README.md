@@ -536,6 +536,9 @@ dependencies {
 
 If you want to use this library in your organization, you can publish it to your org package repository. If this is the case, I would recommend you to copy the project or duplicate this repository into your organization VCS (git), so you are in control of the code and can improve or change it as you like.
 
+# Known Limitations
+
+- Collection may occur only in calls between objects, otherwise the underlying proxying logic won't be applied and the collection aspects won't be called.
 
 # Library Development
 
