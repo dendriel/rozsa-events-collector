@@ -19,7 +19,7 @@ public class PerformanceTest {
     private TestRestTemplate testRestTemplate;
 
 
-    @Disabled("This is a performance test to be executed manually (it is slow")
+    @Disabled("This is a performance test to be executed manually (it is slow). Remove this annotation to run the test.")
     @Test
     void perfTestsGetPetByName() {
 

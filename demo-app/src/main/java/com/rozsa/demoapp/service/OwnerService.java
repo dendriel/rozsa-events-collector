@@ -3,7 +3,6 @@ package com.rozsa.demoapp.service;
 import com.rozsa.demoapp.domain.Owner;
 import com.rozsa.demoapp.domain.Pet;
 import com.rozsa.demoapp.repository.OwnerRepository;
-import com.rozsa.events.collector.EventsCollectorManager;
 import com.rozsa.events.collector.annotations.CollectReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
